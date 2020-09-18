@@ -33,9 +33,9 @@ def matchImg(imgtype, imgsrc, imgobj, confidencevalue=0.7):  # imgsrc=原始图�
     else:
         return match_result
 
-img_profile = r'C:\Users\bench\Desktop\img_profile.png'
-img_checkin = r'C:\Users\bench\Desktop\img_checkin.png'
-img_screenshot = r'C:\Users\bench\Desktop\img_window.png'
+img_profile = r'C:\Users\bench\Desktop\ligh\codes\Python\files\img_profile.png'
+img_checkin = r'C:\Users\bench\Desktop\ligh\codes\Python\files\img_checkin.png'
+img_screenshot = r'C:\Users\bench\Desktop\ligh\codes\Python\files\img_window.png'
 
 app_name = '有道云笔记'
 app_class = ''
