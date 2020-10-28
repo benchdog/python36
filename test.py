@@ -917,6 +917,7 @@ import time
 # print(matchImg(src, obj))
 
 #全屏截图
-from PIL import ImageGrab
-im = ImageGrab.grab()
-im.save(r'C:\Users\bench\Desktop\img_window.png')
+# from PIL import ImageGrab
+# im = ImageGrab.grab()
+# im.save(r'C:\Users\bench\Desktop\img_window.png')
+
