@@ -23,22 +23,23 @@ import lxml
 requests.packages.urllib3.disable_warnings()
 
 
-poster_storage = 'D:\\films\\poster\\'
-torrent_storage = 'D:\\films\\torrent\\'
+poster_storage = 'F:\\films\\poster\\'
+torrent_storage = 'F:\\films\\torrent\\'
+es = Elasticsearch(['127.0.0.1:9200'])
 
-es = Elasticsearch(['127.0.0.1:9200','127.0.0.1:9201'])
-
-env = 'alp'
+env = 'sj'
 if env == 'alp':
     # 公司研发环境
     fdfs_server = 'http://192.168.23.113:/'
     fdfs_conf = 'F:\\Codes\\Python\\alphasta\\conf\\fdfs_client_alp.conf'
     mysql_host = '192.168.23.113'
+    # es = Elasticsearch(['192.168.23.116:9200', '192.168.23.117:9200'])
 elif env == 'sj':
     # 市局环境
     mysql_host = '13.32.4.170'
     fdfs_server = 'http://13.32.4.170:/'
     fdfs_conf = 'F:\\Codes\\Python\\alphasta\\conf\\fdfs_client_sj.conf'
+    # es = Elasticsearch(['13.32.4.169:9200', '13.32.4.170:9200', '13.32.4.171:9200'])
 
 userAgent = [
     "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; AcooBrowser; .NET CLR 1.1.4322; .NET CLR 2.0.50727)",
@@ -80,14 +81,15 @@ def local_upload(type,content,path):
     try:
         with open(path, 'wb') as fw:
             fw.write(content)
-            print(type + ' ok')
+            # print(type + ' ok')
     except Exception as e:
         print(type + ' error:', e)
 
 CBK = '3a92d243ea2dd7780ad5bba129cafdf5b' + str(time.time()).replace('.','_')
 
 # www.415.net
-# http://www.3btjia.com/
+# http://647.net
+# http://www.7btjia.com/
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0'}
 cookies = {}
 # cookies = {'bbs_sid': '1b13b2dcd679fd08', 'bbs_page': '1',
@@ -97,11 +99,12 @@ cookies = {}
 # cookies = 'bbs_sid=1b13b2dcd679fd08; bbs_page=1; bbs_auth=klNQP7uYal3tg708DYugb9sAL3wS9gaRO9nGilKJV9KXjCnfM6bhpOM6dsZVvopR2gvWeuDYPfCx%252BJg432ED%25252Fg%253D%253D; bbs_lastonlineupdate=1595251915; bbs_lastday=1595237713; cck_lasttime=1595237714048; cck_count=0; timeoffset=%2B08Cookie'
 data = {}
 payload = {}
-for page in range(3,665):
-    url = 'http://www.3btjia.com/forum-index-fid-1-page-' + str(page) + '.htm'
+for page in range(1,790):
+    url = 'http://www.7btjia.com/forum-index-fid-1-page-' + str(page) + '.htm'
     # url = 'http://www.3btjia.com/forum-index-fid-1-page-2.htm'
     try:
-        print('最新电影页：', url)
+        cur_page = url.split('-')[-1].split('.')[0]
+        print('最新电影页：', cur_page)
         response = requests.get(url, headers=headers, cookies=cookies, data=data, params=payload,verify=False).text.replace('\u25b6','').replace('\u25c0','')
         soup = BeautifulSoup(response, features='lxml')
         # print(soup.prettify())
@@ -123,7 +126,7 @@ for page in range(3,665):
                 continue
             # 请求每部电影的链接
             try:
-                print('单部电影：', film_url)
+                print('电影 ', film_url)
                 film_response = requests.get(film_url, headers=headers, cookies=cookies, data=data, params=payload,verify=False).text
                 film_soup = BeautifulSoup(film_response, features='lxml').find('td', class_="post_td")
                 # print(film_soup.prettify())
@@ -134,8 +137,13 @@ for page in range(3,665):
                 # print(type(film_id))
                 # 电影名字和电影属性(年代、产地、类型)
                 film_info = film_soup.find('h2').text.strip().replace('\t', '').split('\n')
-                film_name = film_info[1].strip()
-                film_attr = film_info[0].strip()
+                if film_info and len(film_info) >= 2:
+                    film_name = film_info[1].strip()
+                    film_attr = film_info[0].strip()
+                else:
+                    print('此电影链接不可用')
+                    continue
+
 
                 # 电影详细介绍(导演、主演、类型、剧情介绍等)
                 film_desc = ''
@@ -151,7 +159,7 @@ for page in range(3,665):
 
                 # 电影海报、电影种子保存到FastDFS or 本地路径，路径映射到MySQL：poster_path、torrent_path
                 # 电影海报(第一张是海报，剩余是电影截图)
-                print('海报 start')
+                # print('海报 start')
                 film_posters_list = film_soup.select('img')
                 for poster_counter in range(len(film_posters_list)):
                     film_poster_url = film_posters_list[poster_counter]['src']
@@ -171,7 +179,7 @@ for page in range(3,665):
                             print('请求单张海报异常：' + film_poster_url + '：' + e)
                             continue
                 # poster_storage_path = poster_storage_path.strip(',')
-                print('海报 finished')
+                print('海报 ok')
 
                 '''                 
                     # 下载图片
@@ -184,7 +192,7 @@ for page in range(3,665):
                 '''
 
                 # 电影种子
-                print('种子 start')
+                # print('种子 start')
                 torrent_counter = 0
                 for film_torrent_ajax in film_soup.find_all('a', class_="ajaxdialog"):
                     film_torrent_ajax_url = film_torrent_ajax['href']
@@ -222,7 +230,7 @@ for page in range(3,665):
                         continue
                 # torrent_storage_path = torrent_storage_path.strip(',')
                 # print(torrent_fdfs_path)
-                print('种子 finished')
+                print('种子 ok')
 
                 # print('film_id',film_id)
                 # print('film_name',film_name)
@@ -261,22 +269,16 @@ for page in range(3,665):
                 # 结构化字段存入ES
                 film_body = {'film_name':film_name,'film_attr':film_attr,'film_desc':film_desc, 'intime':intime}
                 es_res = es.index(index='films', doc_type='basic_info', id=film_id,body=film_body)
-                print(es_res['result'])
+                print('ES ', es_res['result'])
 
             except Exception as e:
-                print('单部电影异常：' + film_id, film_name, film_attr, film_desc, intime + '\n' + e)
+                print('电影异常 ' + film_id, film_name, film_attr, film_desc, intime + '\n' + e)
                 continue
             finally:
                 time.sleep(random.random())
                 # exit()
     except Exception as e:
-        print('最新电影页异常：', e)
-        continue
-
-
-# if __name__ == '__main__':
-#     print('\u8266')
-
+        print('最新电影页异常 ', e)
 
 
     '''
