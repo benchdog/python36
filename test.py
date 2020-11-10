@@ -91,11 +91,11 @@ import random
 # s = "".join(li)
 # print(s)
 
-# li=[]
+# li=['ccc']
 # li.append("'aaa', '111', 'bbb'") #追加
-# # print(li)
+# print(li)
 # li.extend(["sss", "ddd", "fff"]) #扩展（参数为可迭代对象）
-# # print(li)
+# print(li)
 # li.append(['zz','xx','cc'])
 # print(li)
 # v_pop = li.pop()
@@ -921,3 +921,58 @@ import time
 # im = ImageGrab.grab()
 # im.save(r'C:\Users\bench\Desktop\img_window.png')
 
+# import os
+# print(os.path.join(os.path.abspath('.'),'hello.jpg'))
+# print(os.path.join(os.path.abspath('11.jpg')))
+
+# from pypinyin import  lazy_pinyin
+# name_list = []
+# result = []
+# while True:
+#     name = input("请输入姓名：")
+#     if name.upper() == "Q":
+#         break
+#     name_list.append(name)
+# for item in name_list:
+#     name_pinyin = lazy_pinyin(item)
+#     info = {"name":item,'pinyin':name_pinyin}
+#     result.append(info)
+# print(result)
+
+
+# import jieba
+# text = "得不到的永远在骚动"
+# seg_generator = jieba.cut(text, cut_all=True)
+# for item in seg_generator:
+#     print(item)
+
+# import jieba
+# result = []
+# text = input("请输入文本：")
+# seg_generator = jieba.cut(text, cut_all=True)
+# for item in seg_generator:
+#     if item == "猪头":
+#         continue
+#     result.extend(item)
+# print(result)
+
+# v1 = [1,2,3,4,5]
+# v2 = [v1,v1,v1]
+# v2[1][0] = 111
+# v2[2][0] = 222
+# print(v1)
+# print(v2)
+
+# info = ['a','到底','b','不是','c','uu','d']
+# for i in range(0, len(info), 2):
+#     if i + 1 < len(info):
+#         info[i + 1] = '*'
+# print(''.join(info).strip('*'))
+
+# 9*9乘法表
+# for i in range(1, 10):
+#     for j in range(1, i+1):
+#         if j < i:
+#             print(str(i)+'*'+str(j), end=' ')
+#         else:
+#             print(str(i)+'*'+str(j), end='\n')
