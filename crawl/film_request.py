@@ -25,7 +25,7 @@ requests.packages.urllib3.disable_warnings()
 
 poster_storage = 'F:\\films\\poster\\'
 torrent_storage = 'F:\\films\\torrent\\'
-es = Elasticsearch(['127.0.0.1:9200'])
+es = Elasticsearch(['13.32.4.172:9201'])
 
 env = 'sj'
 if env == 'alp':
@@ -74,7 +74,7 @@ def fdfs_upload(content,suffix):
         else:
             print('fdfs上传失败')
     except Exception as e:
-        print('fdfs上传异常' + '：' + e)
+        print('fdfs上传异常' + '：' + str(e))
 '''
 #海报和种子存入本地文件系统
 def local_upload(type,content,path):
@@ -83,14 +83,14 @@ def local_upload(type,content,path):
             fw.write(content)
             # print(type + ' ok')
     except Exception as e:
-        print(type + ' error:', e)
+        print(type + ' error:', str(e))
 
 CBK = '3a92d243ea2dd7780ad5bba129cafdf5b' + str(time.time()).replace('.','_')
 
 # www.415.net
 # http://647.net
 # http://www.7btjia.com/
-headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0'}
+headers = {"Connection":"close",'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0'}
 cookies = {}
 # cookies = {'bbs_sid': '1b13b2dcd679fd08', 'bbs_page': '1',
 #            'bbs_auth': 'klNQP7uYal3tg708DYugb9sAL3wS9gaRO9nGilKJV9KXjCnfM6bhpOM6dsZVvopR2gvWeuDYPfCx%252BJg432ED%25252Fg%253D%253D',
@@ -149,7 +149,7 @@ for page in range(1,790):
                 film_desc = ''
                 for p in film_soup.find_all('p')[:-1]:
                     # print('p：',p.text.replace('\xa0', ''))
-                    film_desc = film_desc + p.text.replace('\xa0', '').replace('\b','').replace('\000','').replace('\u25c0','') + '<br>'
+                    film_desc = film_desc + p.text.replace('\xa0', '').replace('\b','').replace('\000','').replace('\u25c0','').replace('\ubabb','').replace('\ub9d0','') + '<br>'
 
                 # 入库时间
                 intime = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
@@ -176,7 +176,7 @@ for page in range(1,790):
                             poster_storage_path = poster_storage + film_id + '_' + str(poster_counter) + '.jpg'
                             local_upload('海报',film_poster_response,poster_storage_path)
                         except Exception as e:
-                            print('请求单张海报异常：' + film_poster_url + '：' + e)
+                            print('请求单张海报异常：' + film_poster_url + '：' + str(e))
                             continue
                 # poster_storage_path = poster_storage_path.strip(',')
                 print('海报 ok')
@@ -223,10 +223,10 @@ for page in range(1,790):
                             local_upload('种子', film_torrent_url_response, torrent_storage_path)
                             torrent_counter += 1
                         except Exception as e:
-                            print('请求种子异常：' + film_torrent_url + '：' + e)
+                            print('请求种子异常：' + film_torrent_url + '：' + str(e))
                             continue
                     except Exception as e:
-                        print('请求torrent Ajax异常：' + film_torrent_ajax_url + '：' + e)
+                        print('请求torrent Ajax异常：' + film_torrent_ajax_url + '：' + str(e))
                         continue
                 # torrent_storage_path = torrent_storage_path.strip(',')
                 # print(torrent_fdfs_path)
@@ -259,7 +259,7 @@ for page in range(1,790):
                     print('插入MySQL ok')
                 except Exception as e:
                     print("插入MySQL异常:" + film_id, film_name, film_attr, film_desc, poster_storage_path,
-                          torrent_storage_path + '\n' + e)
+                          torrent_storage_path + '\n' + str(e))
                     conn.rollback()
                     # print('插入MySQL异常222')
                 finally:
@@ -272,13 +272,13 @@ for page in range(1,790):
                 print('ES ', es_res['result'])
 
             except Exception as e:
-                print('电影异常 ' + film_id, film_name, film_attr, film_desc, intime + '\n' + e)
+                print('电影异常 ' + film_id, film_name, film_attr, film_desc, intime + '\n' + str(e))
                 continue
             finally:
                 time.sleep(random.random())
                 # exit()
     except Exception as e:
-        print('最新电影页异常 ', e)
+        print('最新电影页异常 ', str(e))
 
 
     '''

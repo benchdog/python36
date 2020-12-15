@@ -976,3 +976,15 @@ import time
 #             print(str(i)+'*'+str(j), end=' ')
 #         else:
 #             print(str(i)+'*'+str(j), end='\n')
+# print(''.join(['a','s','d']))
+
+# li = [1,2,3,4,5]
+# li = li[:3]
+# print(li)
+
+# import time
+# today=time.strftime("%Y-%m-%d", time.localtime())
+# print(today)
+# li = [1,2,3,4,5]
+# li[2] = 333
+# print(li)
