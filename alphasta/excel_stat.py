@@ -18,7 +18,7 @@ def open_xlsx(file):
         workbook = openpyxl.load_workbook(file)
         return workbook
     except Exception as e:
-        print(file + '打开异常：' + e)
+        print(file + '打开异常：' + str(e))
 
 def get_postday(offset):
     today = datetime.datetime.now()
