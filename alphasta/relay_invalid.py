@@ -6,8 +6,8 @@ import openpyxl
 today=time.strftime("%Y-%m-%d", time.localtime())
 excel_civic = r'C:\Users\bench\Desktop\ligh\万方\视频中心区县数据转接\无效设备历史统计\市区无效设备统计.xlsx'
 excel_county = r'C:\Users\bench\Desktop\ligh\万方\视频中心区县数据转接\无效设备历史统计\县域无效设备统计.xlsx'
-excel_civic = '/home/ligh/relay_invalid/civic.xlsx'
-excel_county = '/home/ligh/relay_invalid/county.xlsx'
+# excel_civic = '/home/ligh/relay_invalid/civic.xlsx'
+# excel_county = '/home/ligh/relay_invalid/county.xlsx'
 conn = pymysql.connect(
         host='13.32.4.170',
         # host='192.168.23.112',
@@ -42,14 +42,14 @@ def open_xlsx(file):
 workbook_civic = open_xlsx(excel_civic)
 workbook_county = open_xlsx(excel_county)
 
-sheet_civic_collect = workbook_civic.get_sheet_by_name('市区汇总')
+sheet_civic_collect = workbook_civic.get_sheet_by_name('市区设备汇总')
 sheet_civic_collect.delete_rows(2,50)
-sheet_civic_detail = workbook_civic.get_sheet_by_name('市区明细')
+sheet_civic_detail = workbook_civic.get_sheet_by_name('市区设备明细')
 sheet_civic_detail.delete_rows(2,5000)
 
-sheet_county_collect = workbook_county.get_sheet_by_name('县域汇总')
+sheet_county_collect = workbook_county.get_sheet_by_name('县域设备汇总')
 sheet_county_collect.delete_rows(2,50)
-sheet_county_detail = workbook_county.get_sheet_by_name('县域明细')
+sheet_county_detail = workbook_county.get_sheet_by_name('县域设备明细')
 sheet_county_detail.delete_rows(2,5000)
 
 #市内5区统计
@@ -175,3 +175,4 @@ workbook_civic.save(excel_civic)   #保存excel工作薄
 workbook_civic.close()   #关闭excel工作薄
 workbook_county.save(excel_county)
 workbook_county.close()
+print('脚本完成!')
