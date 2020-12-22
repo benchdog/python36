@@ -988,3 +988,32 @@ import time
 # li = [1,2,3,4,5]
 # li[2] = 333
 # print(li)
+
+# print('123456'[:-2])
+# print('123456'[-1])
+# print(time.strftime("%Y-%m-%d", time.localtime()))
+#
+# from ftplib import FTP
+# def upload(f, remote_path, local_path):
+#     fp = open(local_path, "rb")
+#     buf_size = 1024
+#     f.storbinary("STOR {}".format(remote_path), fp, buf_size)
+#     fp.close()
+#
+#
+# def download(f, remote_path, local_path):
+#     fp = open(local_path, "wb")
+#     buf_size = 1024
+#     f.retrbinary('RETR {}'.format(remote_path), fp.write, buf_size)
+#     fp.close()
+#
+#
+# if __name__ == "__main__":
+#     ftp = FTP()
+#     ftp.connect("13.32.4.176", 21)      # 第一个参数可以是ftp服务器的ip或者域名，第二个参数为ftp服务器的连接端口，默认为21
+#     ftp.login('files', '')  # 匿名登录直接使用ftp.login()
+#     ftp.cwd("县域视频数据统计通报")                # 切换到tmp目录
+#     # ftp.cwd("县域视频数据统计通报")                # 切换到tmp目录
+#     upload(ftp, "县域视频数据统计通报.xlsx", r'C:\Users\bench\Desktop\ligh\万方\视频中心区县数据转接\无效设备历史统计\县域视频数据统计通报.xlsx')   # 将当前目录下的a.txt文件上传到ftp服务器的tmp目录，命名为ftp_a.txt
+#     # download(ftp, "ftp_a.txt", "b.txt")  # 将ftp服务器tmp目录下的ftp_a.txt文件下载到当前目录，命名为b.txt
+#     ftp.quit()

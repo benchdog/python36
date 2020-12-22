@@ -1,13 +1,18 @@
 import pymysql
 import time
 import openpyxl
+import shutil
+import os
+from ftplib import FTP
 
 #当天日期
 today=time.strftime("%Y-%m-%d", time.localtime())
-excel_civic = r'C:\Users\bench\Desktop\ligh\万方\视频中心区县数据转接\无效设备历史统计\市区无效设备统计.xlsx'
-excel_county = r'C:\Users\bench\Desktop\ligh\万方\视频中心区县数据转接\无效设备历史统计\县域无效设备统计.xlsx'
-# excel_civic = '/home/ligh/relay_invalid/civic.xlsx'
-# excel_county = '/home/ligh/relay_invalid/county.xlsx'
+dir = r'C:\Users\bench\Desktop\ligh\万方\视频中心区县数据转接\无效设备历史统计'
+civic = '市区视频数据统计通报'
+county = '县域视频数据统计通报'
+civic_today = civic + '_' + str(today)
+county_today = county + '_' + str(today)
+
 conn = pymysql.connect(
         host='13.32.4.170',
         # host='192.168.23.112',
@@ -21,7 +26,7 @@ conn = pymysql.connect(
 def mysql_select(sql):
     res_select = ()
     try:
-        print('查询...')
+        # print('查询...')
         cursor = conn.cursor()
         cursor.execute(sql)
         res_select = cursor.fetchall()
@@ -39,8 +44,26 @@ def open_xlsx(file):
     except Exception as e:
         print(file + ' 打开异常：' + str(e))
 
-workbook_civic = open_xlsx(excel_civic)
-workbook_county = open_xlsx(excel_county)
+def copy_file(src_file,dst_file):
+    if not os.path.exists(dst_file):
+        shutil.copy(src_file, dst_file)
+        print(str(dst_file) + "创建成功！")
+
+def ftp_upload(f, remote_path, local_path):
+    fp = open(local_path, "rb")
+    buf_size = 1024
+    f.storbinary("STOR {}".format(remote_path), fp, buf_size)
+    fp.close()
+
+
+copy_file(os.path.join(dir,civic + '.xlsx'), os.path.join(dir, civic_today + '.xlsx' ))
+copy_file(os.path.join(dir,civic + '.docx'), os.path.join(dir, civic_today + '.docx' ))
+copy_file(os.path.join(dir,county + '.xlsx'), os.path.join(dir, county_today + '.xlsx' ))
+copy_file(os.path.join(dir,county + '.docx'), os.path.join(dir, county_today + '.docx' ))
+
+
+workbook_civic = open_xlsx(os.path.join(dir, civic_today + '.xlsx' ))
+workbook_county = open_xlsx(os.path.join(dir, county_today + '.xlsx' ))
 
 sheet_civic_collect = workbook_civic.get_sheet_by_name('市区设备汇总')
 sheet_civic_collect.delete_rows(2,50)
@@ -74,6 +97,16 @@ if res_civic:
             else:
                 dict_civic[e[0]][2].append(([e[2], e[3]]))
 # print(dict_civic)
+
+str_civic_face = ''
+str_civic_motor = ''
+for k,v in dict_civic.items():
+    str_civic_face += (k + '：' + str(len(v[0])) + ' ')
+for k,v in dict_civic.items():
+    str_civic_motor += (k + '：' + str(len(v[1])) + ' ')
+print('市区人脸:\n',str_civic_face.strip())
+print('市区车辆:\n',str_civic_motor.strip())
+
 
 l1 = 2
 l2 = 2
@@ -109,11 +142,11 @@ for k,v in dict_civic.items():
         sheet_civic_detail['D' + str(l2)] = v[2][i][0]
         sheet_civic_detail['E' + str(l2)] = v[2][i][1]
         l2 += 1
-
+print('市区人脸/车辆无效设备统计已写入excel\n')
 
 
 #18县统计
-sql_county= "SELECT t0.name,CASE t1.FUNCTION_type WHEN '1' THEN '车辆' when '2' THEN '人脸' ELSE '未知' END AS '设备类别',t1.ape_id,t1.name from ((SELECT deviceId,name from t_viid_system where id not in ('1','32','29','34','37') AND type=1)t0 LEFT JOIN (select data_source,FUNCTION_type,ape_id,name from ape where ape_id not in (SELECT DISTINCT device_Id from t_push_data_log WHERE date=CURDATE() and result =1 AND ((data_source='13010020205035164320' AND type ='12') or (data_source='13010001105030000311' AND type ='13'))))t1 ON t0.deviceId = t1.data_source)"
+sql_county= "SELECT t0.name,CASE t1.FUNCTION_type WHEN '1' THEN '车辆' when '2' THEN '人脸' ELSE '未知' END AS '设备类别',t1.ape_id,t1.name from ((SELECT deviceId,name from t_viid_system where id not in ('1','32','29','34','37') AND type=1)t0 LEFT JOIN (select data_source,FUNCTION_type,ape_id,name from ape where ape_id not in (SELECT DISTINCT device_Id from t_push_data_log WHERE date=CURDATE() and result =1 AND data_source='13010020205035164320' AND type in ('12','13')))t1 ON t0.deviceId = t1.data_source)"
 res_county=mysql_select(sql_county)
 # print(res_county)
 dict_county={}
@@ -134,6 +167,17 @@ if res_county:
             else:
                 dict_county[e[0]][2].append(([e[2], e[3]]))
 # print(dict_county)
+
+str_county_face = ''
+str_county_motor = ''
+for k,v in dict_county.items():
+    str_county_face += (k[:-2] + '：' + str(len(v[0])) + ' ')
+for k,v in dict_county.items():
+    str_county_motor += (k[:-2] + '：' + str(len(v[1])) + ' ')
+print('县域人脸:\n',str_county_face.strip())
+print('县域车辆:\n',str_county_motor.strip())
+
+
 l1 = 2
 l2 = 2
 for k, v in dict_county.items():
@@ -168,11 +212,11 @@ for k, v in dict_county.items():
         sheet_county_detail['D' + str(l2)] = v[2][i][0]
         sheet_county_detail['E' + str(l2)] = v[2][i][1]
         l2 += 1
-
+print('县域人脸/车辆无效设备统计已写入excel\n')
 
 conn.close()   #关闭mysql连接
-workbook_civic.save(excel_civic)   #保存excel工作薄
+workbook_civic.save(os.path.join(dir, civic_today + '.xlsx' ))   #保存excel工作薄
 workbook_civic.close()   #关闭excel工作薄
-workbook_county.save(excel_county)
+workbook_county.save(os.path.join(dir, county_today + '.xlsx' ))
 workbook_county.close()
 print('脚本完成!')
