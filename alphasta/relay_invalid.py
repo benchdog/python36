@@ -180,14 +180,23 @@ print('县域车辆:\n',str_county_motor.strip())
 
 l1 = 2
 l2 = 2
+len1 = 0
+len2 = 0
+len3 = 0
 for k, v in dict_county.items():
     # print(k,len(v[0]),len(v[1]),len(v[2]))
+
     sheet_county_collect['A' + str(l1)] = str(l1 - 1)
     sheet_county_collect['B' + str(l1)] = k
     sheet_county_collect['C' + str(l1)] = len(v[0])
     sheet_county_collect['D' + str(l1)] = len(v[1])
     sheet_county_collect['E' + str(l1)] = len(v[2])
     l1 += 1
+
+    #汇总行统计
+    len1 += len(v[0])
+    len2 += len(v[1])
+    len3 += len(v[2])
 
     for i in range(len(v[0])):
         sheet_county_detail['A' + str(l2)] = str(l2 - 1)
@@ -212,6 +221,14 @@ for k, v in dict_county.items():
         sheet_county_detail['D' + str(l2)] = v[2][i][0]
         sheet_county_detail['E' + str(l2)] = v[2][i][1]
         l2 += 1
+
+#汇总行统计写入excel
+sheet_county_collect['A' + str(l1)] = str(l1 - 1)
+sheet_county_collect['B' + str(l1)] = '汇总'
+sheet_county_collect['C' + str(l1)] = len1
+sheet_county_collect['D' + str(l1)] = len2
+sheet_county_collect['E' + str(l1)] = len3
+
 print('县域人脸/车辆无效设备统计已写入excel\n')
 
 conn.close()   #关闭mysql连接
