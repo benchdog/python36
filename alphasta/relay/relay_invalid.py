@@ -1,9 +1,35 @@
+#coding: utf8
+from docx import Document
+from docx.oxml.ns import qn
+from docx.shared import Pt,RGBColor
 import pymysql
 import time
 import openpyxl
+from openpyxl import Workbook
 import shutil
 import os
 from ftplib import FTP
+
+# docx文档每行内容
+p1 = "    为落实全省公共安全视频智能化建设应用专项治理工作调度会精神，提升我市视频监控前端在线率， 促进我市视频智能化建设应用工作提档升级，按照中心领导要求，从即日起每日对各县（市、区）各类视频监控前端在线、数据质量情况进行通报。\n    一、视频监控前端在线率情况\n"
+p2_civic = "    市内五区\n    长安：     %，桥西：    %，新华：    %，裕华：     %，高新：    %\n\n    二、统计全市智能前端数据质量情况\n    1.人脸智能前端无数据上传数量\n    市内五区\n    "
+p2_county = "    18个县（市、区）\n    无极：  藁城：  栾城：  鹿泉：  正定：  高邑： 新乐：  赞皇：  元氏：  \n    行唐：  循环化工：  井陉：   矿区：  平山：  晋州：  赵县：  灵寿：  深泽： \n\n    二、统计全市智能前端数据质量情况\n    1.人脸智能前端无数据上传数量\n    18个县（市、区）\n    "
+p4_civic = "\n    2.车辆智能前端无数据上传数量\n    市内五区\n    "
+p4_county = "\n    2.车辆智能前端无数据上传数量\n    18个县（市、区）\n    "
+p6 = "\n\n    三、录像可用性\n    不可调用的有"
+def docx_edit(type,p,path):
+    try:
+        docx = Document()
+        docx.styles['Normal'].font.name = u'宋体'
+        docx.styles['Normal']._element.rPr.rFonts.set(qn('w:eastAsia'), u'宋体')
+        docx.styles['Normal'].font.size = Pt(10.5)
+        docx.styles['Normal'].font.color.rgb = RGBColor(0,0,0)
+        docx.add_paragraph(p)
+        docx.add_page_break()
+        docx.save(path)
+        print(str(type) + '人脸/车辆无效设备统计已写入docx')
+    except Exception as e:
+        print('docx文档编辑异常' + str(e))
 
 #当天日期
 today=time.strftime("%Y-%m-%d", time.localtime())
@@ -57,24 +83,59 @@ def ftp_upload(f, remote_path, local_path):
     fp.close()
 
 
-copy_file(os.path.join(dir,civic + '.xlsx'), os.path.join(dir, civic_today + '.xlsx' ))
-copy_file(os.path.join(dir,civic + '.docx'), os.path.join(dir, civic_today + '.docx' ))
-copy_file(os.path.join(dir,county + '.xlsx'), os.path.join(dir, county_today + '.xlsx' ))
-copy_file(os.path.join(dir,county + '.docx'), os.path.join(dir, county_today + '.docx' ))
+# copy_file(os.path.join(dir,civic + '.xlsx'), os.path.join(dir, civic_today + '.xlsx' ))
+# copy_file(os.path.join(dir,civic + '.docx'), os.path.join(dir, civic_today + '.docx' ))
+# copy_file(os.path.join(dir,county + '.xlsx'), os.path.join(dir, county_today + '.xlsx' ))
+# copy_file(os.path.join(dir,county + '.docx'), os.path.join(dir, county_today + '.docx' ))
 
 
-workbook_civic = open_xlsx(os.path.join(dir, civic_today + '.xlsx' ))
-workbook_county = open_xlsx(os.path.join(dir, county_today + '.xlsx' ))
+# workbook_civic = open_xlsx(os.path.join(dir, civic_today + '.xlsx' ))
+# workbook_county = open_xlsx(os.path.join(dir, county_today + '.xlsx' ))
+#
+# sheet_civic_collect = workbook_civic.get_sheet_by_name('市区设备汇总')
+# sheet_civic_collect.delete_rows(2,50)
+# sheet_civic_detail = workbook_civic.get_sheet_by_name('市区设备明细')
+# sheet_civic_detail.delete_rows(2,5000)
+#
+# sheet_county_collect = workbook_county.get_sheet_by_name('县域设备汇总')
+# sheet_county_collect.delete_rows(2,50)
+# sheet_county_detail = workbook_county.get_sheet_by_name('县域设备明细')
+# sheet_county_detail.delete_rows(2,5000)
 
-sheet_civic_collect = workbook_civic.get_sheet_by_name('市区设备汇总')
-sheet_civic_collect.delete_rows(2,50)
-sheet_civic_detail = workbook_civic.get_sheet_by_name('市区设备明细')
-sheet_civic_detail.delete_rows(2,5000)
+workbook_civic = Workbook()  # 创建工作簿
+sheet_civic_collect = workbook_civic.create_sheet("市区设备汇总")  # 创建mysheet表
+sheet_civic_detail = workbook_civic.create_sheet("市区设备明细")
+workbook_county = Workbook()  # 创建工作簿
+sheet_county_collect = workbook_county.create_sheet("县域设备汇总")  # 创建mysheet表
+sheet_county_detail = workbook_county.create_sheet("县域设备明细")
 
-sheet_county_collect = workbook_county.get_sheet_by_name('县域设备汇总')
-sheet_county_collect.delete_rows(2,50)
-sheet_county_detail = workbook_county.get_sheet_by_name('县域设备明细')
-sheet_county_detail.delete_rows(2,5000)
+workbook_civic.remove(workbook_civic['Sheet'])
+workbook_county.remove(workbook_county['Sheet'])
+
+sheet_civic_collect['A1'] = '序号'
+sheet_civic_collect['B1'] = '区县厂商'
+sheet_civic_collect['C1'] = '人脸'
+sheet_civic_collect['D1'] = '车辆'
+sheet_civic_collect['E1'] = '未知'
+sheet_civic_detail['A1'] = '序号'
+sheet_civic_detail['B1'] = '区县厂商'
+sheet_civic_detail['C1'] = '设备类型'
+sheet_civic_detail['D1'] = '设备ID'
+sheet_civic_detail['E1'] = '设备名称'
+
+sheet_county_collect['A1'] = '序号'
+sheet_county_collect['B1'] = '区县厂商'
+sheet_county_collect['C1'] = '人脸'
+sheet_county_collect['D1'] = '车辆'
+sheet_county_collect['E1'] = '未知'
+sheet_county_detail['A1'] = '序号'
+sheet_county_detail['B1'] = '区县厂商'
+sheet_county_detail['C1'] = '设备类型'
+sheet_county_detail['D1'] = '设备ID'
+sheet_county_detail['E1'] = '设备名称'
+
+
+
 
 #市内5区统计
 sql_civic="select data_source,function_type,id,name from ape_civic where id not in (select device_id from t_receive_data_log where date=CURDATE() AND type not in ('3','7'))"
@@ -99,14 +160,24 @@ if res_civic:
                 dict_civic[e[0]][2].append(([e[2], e[3]]))
 # print(dict_civic)
 
-str_civic_face = ''
-str_civic_motor = ''
+
+dict_civic_face = {}
+dict_civic_motor = {}
+p3_civic = ''
+p5_civic = ''
 for k,v in dict_civic.items():
-    str_civic_face += (k + '：' + str(len(v[0])) + ' ')
+    dict_civic_face[k] = len(v[0])
+for i in sorted(dict_civic_face.items(), key=lambda d: d[1], reverse=False):
+    p3_civic += (i[0] + '：' + str(i[1]) + ' ')
+
 for k,v in dict_civic.items():
-    str_civic_motor += (k + '：' + str(len(v[1])) + ' ')
-print('市区人脸:\n',str_civic_face.strip())
-print('市区车辆:\n',str_civic_motor.strip())
+    dict_civic_motor[k] = len(v[1])
+for i in sorted(dict_civic_motor.items(), key=lambda d: d[1], reverse=False):
+    p5_civic += (i[0] + '：' + str(i[1]) + ' ')
+# print('市区人脸:\n',p3_civic.strip())
+# print('市区车辆:\n',p5_civic.strip())
+docx_edit('市区', p1 + p2_civic + p3_civic + p4_civic + p5_civic + p6, os.path.join(dir, civic_today + '.docx' ))
+
 
 
 l1 = 2
@@ -143,7 +214,7 @@ for k,v in dict_civic.items():
         sheet_civic_detail['D' + str(l2)] = v[2][i][0]
         sheet_civic_detail['E' + str(l2)] = v[2][i][1]
         l2 += 1
-print('市区人脸/车辆无效设备统计已写入excel\n')
+print('市区人脸/车辆无效设备统计已写入excel\n<--------->')
 
 
 #18县统计
@@ -169,14 +240,37 @@ if res_county:
                 dict_county[e[0]][2].append(([e[2], e[3]]))
 # print(dict_county)
 
-str_county_face = ''
-str_county_motor = ''
+
+
+
+for k,v in dict_civic.items():
+    dict_civic_face[k] = len(v[0])
+for i in sorted(dict_civic_face.items(), key=lambda d: d[1], reverse=False):
+    p3_civic += (i[0] + '：' + str(i[1]) + ' ')
+
+for k,v in dict_civic.items():
+    dict_civic_motor[k] = len(v[1])
+for i in sorted(dict_civic_motor.items(), key=lambda d: d[1], reverse=False):
+    p5_civic += (i[0] + '：' + str(i[1]) + ' ')
+
+
+
+dict_county_face = {}
+dict_county_motor = {}
+p3_county = ''
+p5_county = ''
 for k,v in dict_county.items():
-    str_county_face += (k[:-2] + '：' + str(len(v[0])) + ' ')
+    dict_county_face[k] = len(v[0])
+for i in sorted(dict_county_face.items(), key=lambda d: d[1], reverse=False):
+    p3_county += (i[0][:-2] + '：' + str(i[1]) + ' ')
+
 for k,v in dict_county.items():
-    str_county_motor += (k[:-2] + '：' + str(len(v[1])) + ' ')
-print('县域人脸:\n',str_county_face.strip())
-print('县域车辆:\n',str_county_motor.strip())
+    dict_county_motor[k] = len(v[1])
+for i in sorted(dict_county_motor.items(), key=lambda d: d[1], reverse=False):
+    p5_county += (i[0][:-2] + '：' + str(i[1]) + ' ')
+# print('县域人脸:\n',p3_county.strip())
+# print('县域车辆:\n',p5_county.strip())
+docx_edit('县域', p1 + p2_county + p3_county + p4_county + p5_county + p6, os.path.join(dir, county_today + '.docx' ))
 
 
 l1 = 2
@@ -230,7 +324,7 @@ sheet_county_collect['C' + str(l1)] = len1
 sheet_county_collect['D' + str(l1)] = len2
 sheet_county_collect['E' + str(l1)] = len3
 
-print('县域人脸/车辆无效设备统计已写入excel\n')
+print('县域人脸/车辆无效设备统计已写入excel\n<--------->')
 
 conn.close()   #关闭mysql连接
 workbook_civic.save(os.path.join(dir, civic_today + '.xlsx' ))   #保存excel工作薄
