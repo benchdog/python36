@@ -1020,13 +1020,13 @@ import time
 #     # download(ftp, "ftp_a.txt", "b.txt")  # 将ftp服务器tmp目录下的ftp_a.txt文件下载到当前目录，命名为b.txt
 #     ftp.quit()
 
-# from ftplib import FTP
-# ftp = FTP()
-# ftp.connect("13.32.4.176", 21)
-# ftp.login('files', '')
-# # ftp.retrlines('LIST')
-# ftp.cwd("县域视频数据统计通报".encode('gbk').decode('iso-8859-1'))
-# fp = open(r'C:\Users\bench\Desktop\ligh\万方\视频中心区县数据转接\无效设备历史统计\市区视频数据统计通报_2020.xlsx', 'rb')
-# dst = '市区视频数据统计通报_2020.xlsx'.encode('gbk').decode('iso-8859-1')
-# ftp.storbinary('STOR ' + dst, fp)
-# ftp.close()
+from ftplib import FTP
+ftp = FTP()
+ftp.connect("13.32.4.176", 21)
+ftp.login('files', '')
+# ftp.retrlines('LIST')
+ftp.cwd("县域视频数据统计通报".encode('gbk').decode('iso-8859-1'))
+fp = open(r'C:\Users\bench\Desktop\ligh\万方\视频中心区县数据转接\无效设备历史统计\市区视频数据统计通报_2020.xlsx', 'rb')
+dst = '市区视频数据统计通报_2020.xlsx'.encode('gbk').decode('iso-8859-1')
+ftp.storbinary('STOR ' + dst, fp)
+ftp.close()
