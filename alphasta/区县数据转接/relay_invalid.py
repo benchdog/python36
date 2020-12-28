@@ -29,7 +29,7 @@ def docx_edit(type,p,path):
         docx.save(path)
         print(str(type) + '人脸/车辆无效设备统计已写入docx')
     except Exception as e:
-        print('docx文档编辑异常' + str(e))
+        print('docx文档编辑异常：' + str(e))
 
 #当天日期
 today=time.strftime("%Y-%m-%d", time.localtime())
@@ -39,6 +39,24 @@ civic = '市区视频数据统计通报'
 county = '县域视频数据统计通报'
 civic_today = civic + '_' + str(today)
 county_today = county + '_' + str(today)
+
+#连接ftp
+try:
+    ftp = FTP()
+    ftp.connect("13.32.4.176", 21)  #第一个参数可以是ftp服务器的ip或者域名，第二个参数为ftp服务器的连接端口，默认为21
+    ftp.login('files', '')   #匿名登录直接使用ftp.login()
+    ftp.cwd("县域视频数据统计通报".encode('gbk').decode('iso-8859-1'))
+    # print('ftp连接成功')
+except Exception as e:
+    print('ftp连接异常：' + str(e))
+
+def ftp_upload(ftp, src, dst):
+    try:
+        fp = open(src, 'rb')
+        ftp.storbinary('STOR ' + dst.encode('gbk').decode('iso-8859-1'), fp, 1024)
+        print(str(dst) + '上传ftp成功')
+    except Exception as e:
+        print(str(dst) + '上传ftp失败：' + str(e))
 
 conn = pymysql.connect(
         host='13.32.4.170',
@@ -75,13 +93,6 @@ def copy_file(src_file,dst_file):
     if not os.path.exists(dst_file):
         shutil.copy(src_file, dst_file)
         print(str(dst_file) + "创建成功！")
-
-def ftp_upload(f, remote_path, local_path):
-    fp = open(local_path, "rb")
-    buf_size = 1024
-    f.storbinary("STOR {}".format(remote_path), fp, buf_size)
-    fp.close()
-
 
 # copy_file(os.path.join(dir,civic + '.xlsx'), os.path.join(dir, civic_today + '.xlsx' ))
 # copy_file(os.path.join(dir,civic + '.docx'), os.path.join(dir, civic_today + '.docx' ))
@@ -135,8 +146,6 @@ sheet_county_detail['D1'] = '设备ID'
 sheet_county_detail['E1'] = '设备名称'
 
 
-
-
 #市内5区统计
 sql_civic="select data_source,function_type,id,name from ape_civic where id not in (select device_id from t_receive_data_log where date=CURDATE() AND type not in ('3','7'))"
 res_civic=mysql_select(sql_civic)
@@ -174,8 +183,8 @@ for k,v in dict_civic.items():
     dict_civic_motor[k] = len(v[1])
 for i in sorted(dict_civic_motor.items(), key=lambda d: d[1], reverse=False):
     p5_civic += (i[0] + '：' + str(i[1]) + ' ')
-# print('市区人脸:\n',p3_civic.strip())
-# print('市区车辆:\n',p5_civic.strip())
+print('市区人脸:\n',p3_civic.strip())
+print('市区车辆:\n',p5_civic.strip())
 docx_edit('市区', p1 + p2_civic + p3_civic + p4_civic + p5_civic + p6, os.path.join(dir, civic_today + '.docx' ))
 
 
@@ -215,7 +224,6 @@ for k,v in dict_civic.items():
         sheet_civic_detail['E' + str(l2)] = v[2][i][1]
         l2 += 1
 print('市区人脸/车辆无效设备统计已写入excel\n<--------->')
-
 
 #18县统计
 sql_county= "SELECT t0.name,CASE t1.FUNCTION_type WHEN '1' THEN '车辆' when '2' THEN '人脸' ELSE '未知' END AS '设备类别',t1.ape_id,t1.name from ((SELECT deviceId,name from t_viid_system where id not in ('1','32','29','34','37') AND type=1)t0 LEFT JOIN (select data_source,FUNCTION_type,ape_id,name from ape where ape_id not in (SELECT DISTINCT device_Id from t_push_data_log WHERE date=CURDATE() and result =1 AND data_source='13010020205035164320' AND type in ('12','13')))t1 ON t0.deviceId = t1.data_source)"
@@ -268,8 +276,8 @@ for k,v in dict_county.items():
     dict_county_motor[k] = len(v[1])
 for i in sorted(dict_county_motor.items(), key=lambda d: d[1], reverse=False):
     p5_county += (i[0][:-2] + '：' + str(i[1]) + ' ')
-# print('县域人脸:\n',p3_county.strip())
-# print('县域车辆:\n',p5_county.strip())
+print('县域人脸:\n',p3_county.strip())
+print('县域车辆:\n',p5_county.strip())
 docx_edit('县域', p1 + p2_county + p3_county + p4_county + p5_county + p6, os.path.join(dir, county_today + '.docx' ))
 
 
@@ -326,9 +334,17 @@ sheet_county_collect['E' + str(l1)] = len3
 
 print('县域人脸/车辆无效设备统计已写入excel\n<--------->')
 
-conn.close()   #关闭mysql连接
-workbook_civic.save(os.path.join(dir, civic_today + '.xlsx' ))   #保存excel工作薄
-workbook_civic.close()   #关闭excel工作薄
+#保存、关闭两个excel文件
+workbook_civic.save(os.path.join(dir, civic_today + '.xlsx' ))
+workbook_civic.close()
 workbook_county.save(os.path.join(dir, county_today + '.xlsx' ))
 workbook_county.close()
+
+#县域统计上传ftp
+ftp_upload(ftp, os.path.join(dir, county_today + '.docx'), county_today + '.docx')
+ftp_upload(ftp, os.path.join(dir, county_today + '.xlsx'), county_today + '.xlsx')
+print('<--------->')
+
+conn.close()   #关闭mysql连接
+ftp.close()   #关闭ftp
 print('脚本完成!')
