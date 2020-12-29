@@ -8,6 +8,7 @@
 <table border="1px" width="70%" style="border-collapse: collapse;">
     <a href="../app01/add">添加视图库</a>
     <tr>
+        <th>序号</th>
         <th>视图库ID</th>
         <th>视图库名称</th>
         <th>上下级</th>
@@ -19,6 +20,7 @@
     {% for viid in viids %}
         <tr>
 <!--            <td align="center">{{ forloop.counter }} </td>-->
+            <td align="center">{{ viid.id }} </td>
             <td align="center">{{ viid.deviceId }} </td>
             <td align="center">{{ viid.name }} </td>
             <td align="center">{{ viid.type }} </td>
