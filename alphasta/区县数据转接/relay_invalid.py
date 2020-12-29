@@ -11,11 +11,11 @@ import os
 from ftplib import FTP
 
 # docx文档每行内容
-p1 = "    为落实全省公共安全视频智能化建设应用专项治理工作调度会精神，提升我市视频监控前端在线率， 促进我市视频智能化建设应用工作提档升级，按照中心领导要求，从即日起每日对各县（市、区）各类视频监控前端在线、数据质量情况进行通报。\n    一、视频监控前端在线率情况\n"
+p1 = "    为落实全省公共安全视频智能化建设应用专项治理工作调度会精神，提升我市视频监控前端在线率， 促进我市视频智能化建设应用工作提档升级，按照中心领导要求，每日对各县（市、区）各类视频监控前端在线、数据质量情况进行通报。\n\n    一、视频监控前端在线率情况\n"
 p2_civic = "    市内五区\n    长安：     %，桥西：    %，新华：    %，裕华：     %，高新：    %\n\n    二、统计全市智能前端数据质量情况\n    1.人脸智能前端无数据上传数量\n    市内五区\n    "
-p2_county = "    18个县（市、区）\n    无极：  藁城：  栾城：  鹿泉：  正定：  高邑： 新乐：  赞皇：  元氏：  \n    行唐：  循环化工：  井陉：   矿区：  平山：  晋州：  赵县：  灵寿：  深泽： \n\n    二、统计全市智能前端数据质量情况\n    1.人脸智能前端无数据上传数量\n    18个县（市、区）\n    "
+p2_county = "    无极：  藁城：  栾城：  鹿泉：  正定：  高邑： 新乐：  赞皇：  元氏：  \n    行唐：  循环化工：  井陉：   矿区：  平山：  晋州：  赵县：  灵寿：  深泽： \n\n    二、统计全市智能前端数据质量情况\n    1.人脸智能前端无数据上传数量\n    "
 p4_civic = "\n    2.车辆智能前端无数据上传数量\n    市内五区\n    "
-p4_county = "\n    2.车辆智能前端无数据上传数量\n    18个县（市、区）\n    "
+p4_county = "\n    2.车辆智能前端无数据上传数量\n    "
 p6 = "\n\n    三、录像可用性\n    不可调用的有"
 def docx_edit(type,p,path):
     try:
@@ -41,22 +41,39 @@ civic_today = civic + '_' + str(today)
 county_today = county + '_' + str(today)
 
 #连接ftp
-try:
-    ftp = FTP()
-    ftp.connect("13.32.4.176", 21)  #第一个参数可以是ftp服务器的ip或者域名，第二个参数为ftp服务器的连接端口，默认为21
-    ftp.login('files', '')   #匿名登录直接使用ftp.login()
-    ftp.cwd("县域视频数据统计通报".encode('gbk').decode('iso-8859-1'))
-    # print('ftp连接成功')
-except Exception as e:
-    print('ftp连接异常：' + str(e))
+# try:
+#     ftp = FTP()
+#     ftp.connect("13.32.4.176", 21)  #第一个参数可以是ftp服务器的ip或者域名，第二个参数为ftp服务器的连接端口，默认为21
+#     ftp.login('files', '')   #匿名登录直接使用ftp.login()
+#     # ftp.cwd('县域视频数据统计通报'.encode('gbk').decode('iso-8859-1'))
+# except Exception as e:
+#     print('ftp连接异常：' + str(e))
+#
+# def ftp_upload(ftp, cwd, src, dst):
+#     try:
+#         # ftp.cwd(cwd.encode('gbk').decode('iso-8859-1'))
+#         ftp.cwd(cwd)
+#         fp = open(src, 'rb')
+#         ftp.storbinary('STOR ' + dst.encode('gbk').decode('iso-8859-1'), fp, 1024)
+#         print(str(dst) + '上传ftp成功')
+#     except Exception as e:
+#         print(str(dst) + '上传ftp失败：' + str(e))
 
-def ftp_upload(ftp, src, dst):
+
+def ftp_upload(cwd, src, dst):
     try:
+        ftp = FTP()
+        ftp.connect("13.32.4.176", 21)  #第一个参数可以是ftp服务器的ip或者域名，第二个参数为ftp服务器的连接端口，默认为21
+        ftp.login('files', '')   #匿名登录直接使用ftp.login()
+        # ftp.cwd('县域视频数据统计通报'.encode('gbk').decode('iso-8859-1'))
+        ftp.cwd(cwd.encode('gbk').decode('iso-8859-1'))
         fp = open(src, 'rb')
         ftp.storbinary('STOR ' + dst.encode('gbk').decode('iso-8859-1'), fp, 1024)
         print(str(dst) + '上传ftp成功')
     except Exception as e:
-        print(str(dst) + '上传ftp失败：' + str(e))
+        print('上传ftp失败：' + str(e))
+    finally:
+        ftp.close()   #关闭ftp
 
 conn = pymysql.connect(
         host='13.32.4.170',
@@ -133,6 +150,7 @@ sheet_civic_detail['B1'] = '区县厂商'
 sheet_civic_detail['C1'] = '设备类型'
 sheet_civic_detail['D1'] = '设备ID'
 sheet_civic_detail['E1'] = '设备名称'
+sheet_civic_detail['F1'] = '设备IP'
 
 sheet_county_collect['A1'] = '序号'
 sheet_county_collect['B1'] = '区县厂商'
@@ -147,7 +165,7 @@ sheet_county_detail['E1'] = '设备名称'
 
 
 #市内5区统计
-sql_civic="select data_source,function_type,id,name from ape_civic where id not in (select device_id from t_receive_data_log where date=CURDATE() AND type not in ('3','7'))"
+sql_civic="select data_source,function_type,id,name,ip from ape_civic where id not in (select device_id from t_receive_data_log where date=CURDATE() AND type not in ('3','7'))"
 res_civic=mysql_select(sql_civic)
 # print(res_civic)
 dict_civic={}
@@ -155,18 +173,18 @@ if res_civic:
     for e in res_civic:
         if e[0] not in dict_civic.keys():
             if e[1] == '人脸':
-                dict_civic.update({e[0]:[[([e[2], e[3]])], [], []]})
+                dict_civic.update({e[0]:[[(e[2], e[3], e[4])], [], []]})
             elif e[1] == '车辆':
-                dict_civic.update({e[0]: [[], [([e[2], e[3]])], []]})
+                dict_civic.update({e[0]: [[], [([e[2], e[3], e[4]])], []]})
             else:
-                dict_civic.update({e[0]: [[], [], [([e[2], e[3]])]]})
+                dict_civic.update({e[0]: [[], [], [([e[2], e[3], e[4]])]]})
         else:
             if e[1] == '人脸':
-                dict_civic[e[0]][0].append(([e[2], e[3]]))
+                dict_civic[e[0]][0].append(([e[2], e[3], e[4]]))
             elif e[1] == '车辆':
-                dict_civic[e[0]][1].append(([e[2], e[3]]))
+                dict_civic[e[0]][1].append(([e[2], e[3], e[4]]))
             else:
-                dict_civic[e[0]][2].append(([e[2], e[3]]))
+                dict_civic[e[0]][2].append(([e[2], e[3], e[4]]))
 # print(dict_civic)
 
 
@@ -206,6 +224,7 @@ for k,v in dict_civic.items():
         sheet_civic_detail['C' + str(l2)] = '人脸'
         sheet_civic_detail['D' + str(l2)] = v[0][i][0]
         sheet_civic_detail['E' + str(l2)] = v[0][i][1]
+        sheet_civic_detail['F' + str(l2)] = v[0][i][2]
         l2 += 1
 
     for i in range(len(v[1])):
@@ -214,6 +233,7 @@ for k,v in dict_civic.items():
         sheet_civic_detail['C' + str(l2)] = '车辆'
         sheet_civic_detail['D' + str(l2)] = v[1][i][0]
         sheet_civic_detail['E' + str(l2)] = v[1][i][1]
+        sheet_civic_detail['F' + str(l2)] = v[1][i][2]
         l2 += 1
 
     for i in range(len(v[2])):
@@ -341,10 +361,14 @@ workbook_county.save(os.path.join(dir, county_today + '.xlsx' ))
 workbook_county.close()
 
 #县域统计上传ftp
-ftp_upload(ftp, os.path.join(dir, county_today + '.docx'), county_today + '.docx')
-ftp_upload(ftp, os.path.join(dir, county_today + '.xlsx'), county_today + '.xlsx')
+# '市区视频数据统计通报'.encode('gbk').decode('iso-8859-1')
+ftp_upload(county, os.path.join(dir, county_today + '.docx'), county_today + '.docx')
+# time.sleep(10)
+ftp_upload(county, os.path.join(dir, county_today + '.xlsx'), county_today + '.xlsx')
+#市区统计上传ftp
+ftp_upload(civic, os.path.join(dir, civic_today + '.docx'), civic_today + '.docx')
+ftp_upload(civic, os.path.join(dir, civic_today + '.xlsx'), civic_today + '.xlsx')
 print('<--------->')
 
 conn.close()   #关闭mysql连接
-ftp.close()   #关闭ftp
 print('脚本完成!')

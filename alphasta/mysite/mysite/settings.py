@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'app01',
+    # 'app01.apps.App01Config',
+    'app01',
 ]
 
 MIDDLEWARE = [
@@ -79,15 +80,15 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-        # 'ENGINE': 'django.db.backends.mysql',
-        # 'NAME': 'db1400',
-        # 'USER': 'root',
-        # 'PASSWORD': 'wanfang@2001',
-        # # 'HOST': '13.32.4.170',
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'test', #db1400
+        'USER': 'root',
+        'PASSWORD': 'wanfang@2001',
+        'HOST': '13.32.4.170',
         # 'HOST': '192.168.23.112',
-        # 'PORT': '3306',
+        'PORT': '3306',
     }
 }
 
@@ -109,6 +110,24 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console':{
+            'level':'DEBUG',
+            'class':'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.db.backends': {
+            'handlers': ['console'],
+            'propagate': True,
+            'level':'DEBUG',
+        },
+    }
+}
 
 
 # Internationalization
