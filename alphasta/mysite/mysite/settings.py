@@ -86,8 +86,8 @@ DATABASES = {
         'NAME': 'test', #db1400
         'USER': 'root',
         'PASSWORD': 'wanfang@2001',
-        # 'HOST': '13.32.4.170',
-        'HOST': '192.168.23.112',
+        'HOST': '13.32.4.170',
+        # 'HOST': '192.168.23.112',
         'PORT': '3306',
     }
 }
