@@ -31,7 +31,7 @@ def mysql_select(sql):
 
 #统计t_push_data_log有效设备路数
 # sql_push="SELECT t0.name,t2.type,cnt1 FROM((select deviceId,name FROM t_viid_system where type =1 and id not in(1,32))t0 LEFT JOIN (select t1.src_data_source,t1.type,count(*) AS cnt1 FROM (SELECT DISTINCT src_data_source,type,device_Id from t_push_data_log WHERE date=CURDATE() and result =1 AND ((data_source='13010020205035164320' AND type ='12') or (data_source='13010001105030000311' AND type ='13'))) t1 GROUP BY t1.src_data_source,t1.type)t2 on t0.deviceId=t2.src_data_source)"
-sql_push="SELECT t0.name,t2.type,cnt1 FROM((select deviceId,name FROM t_viid_system where type =1 and id not in(1,32))t0 LEFT JOIN (select t1.src_data_source,t1.type,count(*) AS cnt1 FROM (SELECT DISTINCT src_data_source,type,device_Id from t_push_data_log WHERE date=CURDATE() and result =1 AND data_source='13010020205035164320' AND type in ('12','13')) t1 GROUP BY t1.src_data_source,t1.type)t2 on t0.deviceId=t2.src_data_source)"
+sql_push="SELECT t0.name,t2.type,cnt1 FROM((select deviceId,name FROM t_viid_system where type =1 and id not in(1,32))t0 LEFT JOIN (select t1.src_data_source,t1.type,count(*) AS cnt1 FROM (SELECT DISTINCT src_data_source,type,device_Id from t_push_data_log WHERE device_id != 'null' and date=CURDATE() and result =1 AND data_source='13010020205035164320' AND type in ('12','13')) t1 GROUP BY t1.src_data_source,t1.type)t2 on t0.deviceId=t2.src_data_source)"
 res_push = mysql_select(sql_push)
 dict_push = {}
 # print(res_push)
