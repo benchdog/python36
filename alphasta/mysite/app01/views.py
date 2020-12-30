@@ -1,4 +1,5 @@
 #coding: utf8
+import json
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from app01 import models
@@ -26,18 +27,16 @@ def add(request):
     if request.method == "GET":
         return render(request, 'viid_add.html')
     elif request.method == "POST":
-        # # post_dict = request.POST.getlist
-        # return HttpResponse(request.POST)
-        # return HttpResponse(str(post_dict))
-        post_dict = request.POST
+        post_dict = {'ipv6Addr':'','onlineStatus':2,'count':None,'opTime':None}
         try:
-            viid = models.t_viid_system(post_dict)
-            viid.save()
+            post_dict.update({'deviceId':request.POST.get('deviceId').strip(), 'name':request.POST.get('name').strip(), 'userName':request.POST.get('userName').strip(), 'password':request.POST.get('password').strip(), 'ipAddr':request.POST.get('ipAddr').strip(), 'port':request.POST.get('port').strip(), 'type':request.POST.get('type').strip(), 'subscribeDetail':str(request.POST.getlist('subscribeDetail')).strip('[').strip(']').replace("'",''), 'receiveAddr':request.POST.get('receiveAddr').strip()})
+            models.t_viid_system.objects.create(**post_dict)
+            # viid = models.t_viid_system(post_dict)
+            # viid.save()
             return redirect('/app01')
         except Exception as e:
-            return HttpResponse('error' + str(e))
-
-
+            return HttpResponse('添加视图库错误：' + str(e))
+            # return HttpResponse(str(request.body))
 
 
 def edit(request):

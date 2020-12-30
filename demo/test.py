@@ -856,10 +856,10 @@ else:
 # for k, v in stat_dict.items():
 #     print(k,v)
 
-import win32gui
-import win32con
-from pynput.mouse import Button, Controller
-import time
+# import win32gui
+# import win32con
+# from pynput.mouse import Button, Controller
+# import time
 # child= win32gui.FindWindowEx(win32gui.FindWindow(0, "有道云笔记"),None,'Chrome_RenderWidgetHostHWND', None)
 # print(child)
 # print(win32gui.FindWindow(0, "有道云笔记"))
@@ -1030,3 +1030,6 @@ import time
 # dst = '市区视频数据统计通报_2020.xlsx'.encode('gbk').decode('iso-8859-1')
 # ftp.storbinary('STOR ' + dst, fp)
 # ftp.close()
+
+li = ['3','7','12','13']
+print(str(li).strip('[').strip(']').replace("'",''))
