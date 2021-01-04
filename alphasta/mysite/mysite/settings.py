@@ -86,8 +86,8 @@ DATABASES = {
         'NAME': 'test', #db1400
         'USER': 'root',
         'PASSWORD': 'wanfang@2001',
-        'HOST': '13.32.4.170',
-        # 'HOST': '192.168.23.112',
+        # 'HOST': '13.32.4.170',
+        'HOST': '192.168.23.112',
         'PORT': '3306',
     }
 }
@@ -148,3 +148,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+SUBSCRIBE_URL_PREFIX = 'http://13.32.4.171:8094/ourSideSubscription/subscribe?viidSystemId='

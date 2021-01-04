@@ -5,7 +5,7 @@
     <title>视图库信息</title>
 </head>
 <body>
-<table border="1px" width="70%" style="border-collapse: collapse;">
+<table border="1px" width="auto" style="border-collapse: collapse;">
     <a href="../app01/add">添加视图库</a>
     <tr>
         <th>序号</th>
@@ -15,10 +15,10 @@
         <th>视图库IP</th>
         <th>视图库端口</th>
         <th>是否在线</th>
-        <th>订阅类型</th>
+        <th>订阅类别</th>
         <th>操作</th>
     </tr>
-    {% for viid in viids %}
+    {% for viid in viid_list %}
         <tr>
 <!--            <td align="center">{{ forloop.counter }} </td>-->
             <td align="center">{{ viid.id }} </td>
@@ -36,6 +36,12 @@
                 <a href="../app01/delete/?id={{ viid.id }}">
                     删除
                 </a>
+                <a href="../app01/subscribe/?id={{ viid.id }}">订阅</a>
+<!--                {% if  viid.type == "下级" %}-->
+<!--                <a href="../app01/subscribe/?id={{ viid.id }}">订阅</a>-->
+<!--                {% else %}-->
+<!--                <a href="javascript:return false;" onclick="return false;">订阅</a>-->
+<!--                {% endif %}-->
             </td>
         </tr>
     {% endfor %}

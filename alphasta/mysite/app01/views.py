@@ -3,6 +3,8 @@ import json
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from app01 import models
+from mysite import settings
+
 
 # Create your views here.
 
@@ -17,11 +19,11 @@ from app01 import models
 #         # return HttpResponse(BASE_DIR)
 
 def index(request):
-    viids = models.t_viid_system.objects.all()
-    for i in viids:
-        i.onlineStatus = '在线' if i.onlineStatus == 1 else '离线'
-        i.type = '上级' if i.type == 0 else '下级'
-    return render(request, 'index.html', {'viids':viids})
+    viid_list = models.t_viid_system.objects.all()
+    for viid in viid_list:
+        viid.onlineStatus = '在线' if viid.onlineStatus == 1 else '离线'
+        viid.type = '上级' if viid.type == 0 else '下级'
+    return render(request, 'index.html', {'viid_list':viid_list})
 
 def add(request):
     if request.method == "GET":
@@ -73,3 +75,19 @@ def delete(request):
         models.t_viid_system.objects.get(id = request.GET.get('id')).delete()
         # models.t_viid_system.objects.filter(id = request.GET.get('id')).delete()
         return redirect('/app01')
+
+def subscribe(request):
+    if request.method == 'GET':
+        try:
+            viid = models.t_viid_system.objects.get(id = request.GET.get('id'))
+            subscribe_list = models.t_subscribe.objects.filter(viidSystemID = request.GET.get('id'), subscribeStatus = 0)
+            if subscribe_list:
+                for subscribe in subscribe_list:
+                    subscribe.type = '上级' if subscribe.type == 0 else '下级'
+                    # for detail in subscribe.subscribeDetail.split(','):
+                    #     if
+            return render(request, 'subscribe.html', {'viid':viid, 'subscribe_list':subscribe_list})
+        except Exception as e:
+            return HttpResponse('订阅异常：，' + str(e))
+        # return HttpResponse(request.GET.get('id'))
+    # SUBSCRIBE_URL = settings.SUBSCRIBE_URL_PREFIX + str(request.GET.get('id'))

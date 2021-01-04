@@ -1,7 +1,7 @@
 from django.db import models
 # from __future__ import unicode_literals
 
-# Create your models hee.
+# Create your models here.
 class t_viid_system(models.Model):
     id = models.AutoField(100, primary_key=True) #Ö÷¼ü
     userName = models.CharField(max_length=20)
