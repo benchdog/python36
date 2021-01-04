@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>订阅信息</title>
+</head>
+<body>
+<div>视图库信息</div>
+<table border="1px" width="auto" style="border-collapse: collapse;">
+
+    <tr>
+        <th>序号</th>
+        <th>视图库ID</th>
+        <th>视图库名称</th>
+        <th>订阅类别</th>
+    </tr>
+        <tr>
+            <td align="center">{{ viid.id }} </td>
+            <td align="center">{{ viid.deviceId }} </td>
+            <td align="center">{{ viid.name }} </td>
+            <td align="center">{{ viid.subscribeDetail }} </td>
+        </tr>
+</table>
+<br>
+<br>
+<br>
+    <div>订阅信息</div>
+<table border="1px" width="auto" style="border-collapse: collapse;">
+    <tr>
+        <th>订阅ID</th>
+        <th>订阅标题</th>
+        <th>订阅类别</th>
+        <th>订阅资源类别</th>
+        <th>订阅资源路径</th>
+        <th>接收地址</th>
+        <th>上下级</th>
+        <th>操作</th>
+    </tr>
+    {% for subscribe in subscribe_list %}
+        <tr>
+            <td align="center">{{ subscribe.subscribeID }} </td>
+            <td align="center">{{ subscribe.title }} </td>
+            <td align="center">{{ subscribe.subscribeDetail }} </td>
+            <td align="center">{{ subscribe.resourceClass }} </td>
+            <td align="center">{{ subscribe.resourceURI }} </td>
+            <td align="center">{{ subscribe.receiveAddr }} </td>
+            <td align="center">{{ subscribe.type }} </td>
+            <td align="center">
+                <a href="../app01/sub/?id={{ viid.id }}">
+                    取消订阅
+                </a>
+        </tr>
+    {% endfor %}
+</table>
+<br>
+<br>
+<br>
+<form method="post" action="../subscribe/">
+    {% csrf_token %}
+    <input type="hidden" name="id" value="{{ viid.id }}"/>
+    <table>
+        <tr>
+            <th>订阅类别</th>
+        </tr>
+        <tr>
+            <td>
+            <select multiple="multiple" name="subscribeDetail">
+                <option value=3>设备目录</option>
+                <option value=7>卡口目录</option>
+                <option value=12>人脸数据</option>
+                <option value="13">车辆数据</option>
+            </select>
+            <td>
+        </tr>
+         <tr>
+            <td colspan="2">
+                <input type="submit" value="订阅"/>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>
