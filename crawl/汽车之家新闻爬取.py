@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
+import uuid
+
 import requests
 from bs4 import BeautifulSoup
-import uuid
-import os
 
 response = requests.get(url='http://www.autohome.com.cn/news/')
 #print('编码:',response.apparent_encoding)

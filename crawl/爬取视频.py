@@ -1,7 +1,9 @@
-import requests
+import hashlib
 import re
 import time
-import hashlib
+
+import requests
+
 
 def get_page(url):
     print('GET %s' %url)

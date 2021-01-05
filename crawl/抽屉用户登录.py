@@ -1,5 +1,4 @@
 import requests
-import json
 
 headers = {
     'authority': 'https://dig.chouti.com/login',

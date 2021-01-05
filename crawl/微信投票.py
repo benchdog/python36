@@ -1,7 +1,7 @@
+import uuid
+
 import requests
 from bs4 import BeautifulSoup
-import uuid
-import os
 
 response = requests.get(url='http://10.41.77.13/sjmt/login')
 # print('编码:',response.apparent_encoding)

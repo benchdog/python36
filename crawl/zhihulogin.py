@@ -1,5 +1,6 @@
-import requests
 import time
+
+import requests
 from bs4 import BeautifulSoup
 
 url = 'https://www.zhihu.com/login/email'

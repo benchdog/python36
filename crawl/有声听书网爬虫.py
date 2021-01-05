@@ -4,23 +4,14 @@
 @mood:<(*￣▽￣*)/
 """
 
-import requests
-import os
-import threading
-from lxml import etree
-from threading import Thread
-from fake_useragent import UserAgent
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from tkinter import *
-from tkinter import ttk
-from tkinter import PhotoImage
-from bs4 import BeautifulSoup as bs
 from urllib.parse import quote
 from urllib.parse import unquote
+
+import requests
+from bs4 import BeautifulSoup as bs
+from fake_useragent import UserAgent
+from selenium.webdriver.chrome.options import Options
 
 
 class Ysts8(object):

@@ -1,8 +1,9 @@
 # -*- coding:utf-8 -*-
+import re
+
 import requests
 from bs4 import BeautifulSoup
-import traceback
-import re
+
 
 def getHTMLText(url):
 	try:

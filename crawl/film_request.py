@@ -1,16 +1,12 @@
 # -*- coding: utf-8 -*-
-import requests
 import random
-import json
-import urllib3
-from bs4 import BeautifulSoup
 import time
-import random
+
+import requests
+from bs4 import BeautifulSoup
 # from fdfs_client.client import Fdfs_client,get_tracker_conf
 # import pymysql
 from elasticsearch6 import Elasticsearch
-import lxml
-
 
 # print('\u8266')
 
@@ -25,7 +21,8 @@ requests.packages.urllib3.disable_warnings()
 
 poster_storage = 'F:\\films\\poster\\'
 torrent_storage = 'F:\\films\\torrent\\'
-es = Elasticsearch(['13.32.4.172:9201'])
+# es = Elasticsearch(['13.32.4.172:9201'])
+es = Elasticsearch(['127.0.0.1:9200'])
 
 env = 'sj'
 if env == 'alp':

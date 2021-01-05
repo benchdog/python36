@@ -7,10 +7,12 @@
 # @Software: PyCharm
 # pyinstaller -F -w -i
 import re
-import requests
 import tkinter as tk
 import webbrowser
 from tkinter import messagebox
+
+import requests
+
 response = requests.get('http://www.qmaile.com/')
 
 response.encoding=response.apparent_encoding

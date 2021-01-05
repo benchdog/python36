@@ -1,6 +1,8 @@
-import requests
 import json
 import time
+
+import requests
+
 with open('phone.txt','r') as fr:
     for line in fr:
         time.sleep(1.5)

@@ -99,9 +99,13 @@
 
 
 
-# -*- coding:UTF-8 -*-
-import requests, json, time, sys
 from contextlib import closing
+
+# -*- coding:UTF-8 -*-
+import json
+import requests
+import time
+
 
 class get_photos(object):
 

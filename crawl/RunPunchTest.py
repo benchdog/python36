@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-import requests
-import json
-import sys
 import io
+import sys
 import uuid
+
+import requests
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer,encoding='gb18030')
 post_dict={
