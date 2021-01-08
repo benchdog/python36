@@ -34,7 +34,7 @@ def docx_edit(type,p,path):
 #当天日期
 today=time.strftime("%Y-%m-%d", time.localtime())
 dir = r'C:\Users\bench\Desktop\ligh\万方\视频中心区县数据转接\无效设备历史统计'
-# dir = '/home/ligh/relay_invalid'
+# dir = '/home/ligh/relay_stat'
 civic = '市区视频数据统计通报'
 county = '县域视频数据统计通报'
 civic_today = civic + '_' + str(today)

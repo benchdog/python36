@@ -1034,5 +1034,7 @@ else:
 # li = ['3','7','12','13']
 # print(str(li).strip('[').strip(']').replace("'",''))
 
-for k, v in {3:'设备目录',7:'卡口目录',12:'人脸数据',13:'车辆数据'}.items():
-    print(k,v)
+# for k, v in {3:'设备目录',7:'卡口目录',12:'人脸数据',13:'车辆数据'}.items():
+#     print(k,v)
+
+# print('lsaaa'.strip('a'))
