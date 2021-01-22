@@ -1037,4 +1037,37 @@ else:
 # for k, v in {3:'设备目录',7:'卡口目录',12:'人脸数据',13:'车辆数据'}.items():
 #     print(k,v)
 
-# print('lsaaa'.strip('a'))
+# import threading
+# import time
+# def change_user():
+#   print('这是中断,切换账号')
+#   t = threading.Timer(3, change_user)
+#   t.start()
+# #每过3秒切换一次账号
+# t = threading.Timer(3, change_user)
+# t.start()
+# while True:
+#   print('我在爬数据')
+#   time.sleep(1)
+
+# import time
+# print(str(int(time.time())))
+
+
+import aircv
+def matchImg(imgtype, imgsrc, imgobj, confidencevalue=0.7):  # imgsrc=原始图像，imgobj=待查找的图片
+    imsrc = aircv.imread(imgsrc)
+    imobj = aircv.imread(imgobj)
+    # find_template(原始图像imsrc，待查找的图片imobj，最低相似度confidence)
+    match_result = aircv.find_template(imsrc, imobj, confidencevalue)
+    if match_result is not None:
+        print(imgtype + '相似度：',match_result['confidence'])
+        # match_result['shape'] = (imsrc.shape[1], imsrc.shape[0])  # 1为长，0为宽
+        return (match_result['rectangle'][0][0] + imsrc.shape[1]//2, match_result['rectangle'][0][1] + imsrc.shape[0]//2)
+    else:
+        return match_result
+# print(matchImg('readmore',r'C:\Users\bench\Desktop\ligh\codes\Python\auto\zhongqing\files\img_readmore.png',r'C:\Users\bench\Desktop\ligh\codes\Python\auto\zhongqing\files\dst.png'))
+
+
+import random
+print(random.uniform(1.5,2.5))
