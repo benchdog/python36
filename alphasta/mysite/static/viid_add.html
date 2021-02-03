@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加视图库</title>
+    <style>
+        form {
+            margin: 20px auto;
+            width: 500px;
+            border: 1px solid #ccc;
+            padding: 20px
+        }
+    </style>
+</head>
+<body>
+<form method="post" action="../add/">
+    {% csrf_token %}
+    <table>
+        <tr>
+            <th>视图库ID </th>
+            <td><input name="deviceId"></td>
+        </tr>
+        <tr>
+            <th>视图库名称</th>
+            <td><input name="name"/></td>
+        </tr>
+        <tr>
+            <th>账号</th>
+            <td><input name="userName"/></td>
+        </tr>
+        <tr>
+            <th>密码</th>
+            <td><input name="password"/></td>
+        </tr>
+        <tr>
+            <th>视图库IP</th>
+            <td><input name="ipAddr"/></td>
+        </tr>
+        <tr>
+            <th>视图库端口</th>
+            <td><input name="port"/></td>
+        </tr>
+        <tr>
+            <th>上下级</th>
+            <td>
+            <select name="type">
+                <option value =0>上级</option>
+                <option value =1>下级</option>
+            </select>
+            </td>
+        </tr>
+        <tr>
+            <th>订阅数据类型</th>
+            <td>
+            <select multiple="multiple" name="subscribeDetail">
+              <option value=3>设备目录</option>
+              <option value=7>卡口目录</option>
+              <option value=12>人脸数据</option>
+              <option value=13>车辆数据</option>
+            </select>
+        </tr>
+        <tr>
+            <th>接收地址</th>
+            <td><input name="receiveAddr"/></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit"/>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>视图库编辑</title>
+    <style>
+        form {
+            margin: 20px auto;
+            width: 500px;
+            border: 1px solid #ccc;
+            padding: 20px
+        }
+    </style>
+</head>
+<body>
+<form method="post" action="../edit/">
+    {% csrf_token %}
+    <input type="hidden" name="id" value="{{ viid.id }}"/>
+    <table>
+        <tr>
+            <th>视图库ID</th>
+            <td><input name="deviceId" value="{{ viid.deviceId }}"/></td>
+        </tr>
+        <tr>
+            <th>视图库名称</th>
+            <td><input name="name" value="{{ viid.name }}"/></td>
+        </tr>
+        <tr>
+            <th>账号</th>
+            <td><input name="userName" value="{{ viid.userName }}"/></td>
+        </tr>
+        <tr>
+            <th>密码</th>
+            <td><input name="password" value="{{ viid.password }}"/></td>
+        </tr>
+        <tr>
+            <th>视图库IP</th>
+            <td><input name="ipAddr" value="{{ viid.ipAddr }}"/></td>
+        </tr>
+        <tr>
+            <th>视图库端口</th>
+            <td><input name="port" value="{{ viid.port }}"/></td>
+        </tr>
+        <tr>
+            <th>上下级</th>
+            <td>
+            <select name="type">
+                {% if viid.type == '上级' %}
+                <option value=0 selected>上级</option>
+                <option value=1>下级</option>
+                {% endif %}
+                {% if viid.type == '下级' %}
+                <option value=0>上级</option>
+                <option value=1 selected>下级</option>
+                {% endif %}
+            </select>
+            </td>
+        </tr>
+        <tr>
+            <th>订阅类别</th>
+            <td>
+            <select multiple="multiple" name="subscribeDetail">
+                {% if "3,7" in viid.subscribeDetail or "3,12" in viid.subscribeDetail or "3,13" in viid.subscribeDetail or "3,7,12" in viid.subscribeDetail or "3,7,13" in viid.subscribeDetail or "3,12,13" in viid.subscribeDetail or "3,7,12,13" in viid.subscribeDetail %}
+                <option value=3 selected>设备目录</option>
+                {% else %}
+                <option value=3>设备目录</option>
+                {% endif %}
+                {% if "7" in viid.subscribeDetail %}
+                <option value=7 selected>卡口目录</option>
+                {% else %}
+                <option value=7>卡口目录</option>
+                {% endif %}
+                {% if "12" in viid.subscribeDetail %}
+                <option value=12 selected>人脸数据</option>
+                {% else %}
+                <option value=12>人脸数据</option>
+                {% endif %}
+                {% if "13" in viid.subscribeDetail %}
+                <option value=13 selected>车辆数据</option>
+                {% else %}
+                <option value="13">车辆数据</option>
+                {% endif %}
+            </select>
+            </td>
+        </tr>
+        <tr>
+            <th>接收地址</th>
+            <td><input name="receiveAddr" value="{{ viid.receiveAddr }}"/></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit"/>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>
