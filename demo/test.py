@@ -1054,16 +1054,31 @@ else:
 # print(str(int(time.time())))
 
 
-import aircv
-def matchImg(imgtype, imgsrc, imgobj, confidencevalue=0.7):  # imgsrc=原始图像，imgobj=待查找的图片
-    imsrc = aircv.imread(imgsrc)
-    imobj = aircv.imread(imgobj)
-    # find_template(原始图像imsrc，待查找的图片imobj，最低相似度confidence)
-    match_result = aircv.find_template(imsrc, imobj, confidencevalue)
-    if match_result is not None:
-        print(imgtype + '相似度：',match_result['confidence'])
-        # match_result['shape'] = (imsrc.shape[1], imsrc.shape[0])  # 1为长，0为宽
-        return (match_result['rectangle'][0][0] + imsrc.shape[1]//2, match_result['rectangle'][0][1] + imsrc.shape[0]//2)
-    else:
-        return match_result
+# import aircv
+# def matchImg(imgtype, imgsrc, imgobj, confidencevalue=0.7):  # imgsrc=原始图像，imgobj=待查找的图片
+#     imsrc = aircv.imread(imgsrc)
+#     imobj = aircv.imread(imgobj)
+#     # find_template(原始图像imsrc，待查找的图片imobj，最低相似度confidence)
+#     match_result = aircv.find_template(imsrc, imobj, confidencevalue)
+#     if match_result is not None:
+#         print(imgtype + '相似度：',match_result['confidence'])
+#         # match_result['shape'] = (imsrc.shape[1], imsrc.shape[0])  # 1为长，0为宽
+#         return (match_result['rectangle'][0][0] + imsrc.shape[1]//2, match_result['rectangle'][0][1] + imsrc.shape[0]//2)
+#     else:
+#         return match_result
 # print(matchImg('readmore',r'C:\Users\bench\Desktop\ligh\codes\Python\auto\zhongqing\files\img_readmore.png',r'C:\Users\bench\Desktop\ligh\codes\Python\auto\zhongqing\files\dst.png'))
+
+# -*- coding: UTF-8 -*-
+
+import tkinter as tk
+from tkinter import messagebox
+
+top = tk.Tk()
+
+def helloCallBack():
+    messagebox.showinfo("消息框", "Hello Runoob")
+
+B = tk.Button(top, text="点我", command=helloCallBack)
+
+B.pack()
+top.mainloop()
