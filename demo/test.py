@@ -1070,15 +1070,15 @@ else:
 
 # -*- coding: UTF-8 -*-
 
-import tkinter as tk
-from tkinter import messagebox
-
-top = tk.Tk()
-
-def helloCallBack():
-    messagebox.showinfo("消息框", "Hello Runoob")
-
-B = tk.Button(top, text="点我", command=helloCallBack)
-
-B.pack()
-top.mainloop()
+# import tkinter as tk
+# from tkinter import messagebox
+#
+# top = tk.Tk()
+#
+# def helloCallBack():
+#     messagebox.showinfo("消息框", "Hello Runoob")
+#
+# B = tk.Button(top, text="点我", command=helloCallBack)
+#
+# B.pack()
+# top.mainloop()

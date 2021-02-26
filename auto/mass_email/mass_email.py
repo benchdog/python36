@@ -51,8 +51,8 @@ def open_filedialog():
 def send(smtp_server,smtp_user, entry1, entry2, entry3):
     global to_addr_list
 
-    if str(entry3.get()).strip():
-        msg = MIMEText(str(entry3.get()).strip(), 'plain', 'utf-8')
+    if str(entry3.get("0.0","end")).strip():
+        msg = MIMEText(str(entry3.get("0.0","end")).strip(), 'plain', 'utf-8')
     else:msg = MIMEText('13.32.4.172', 'plain', 'utf-8')
 
     if str(entry1.get()).strip().replace(' ',''):
@@ -97,8 +97,11 @@ entry2 = tk.Entry(window)
 entry2.place(x=70,y=60, width=200, height=25)
 
 tk.Label(window, text='邮件正文').place(x=10,y=110)
-entry3 = tk.Entry(window)
+# entry3 = tk.Entry(window).grid(row=0,column=0,pady=10)
+# entry3.place(x=70,y=110, width=300, height=120)
+entry3 = tk.Text(window)
 entry3.place(x=70,y=110, width=300, height=120)
+
 
 
 # tk.Button(window, text="批量上传邮件接收人", command=lambda: open_filedialog).place(x=260,y=10)
