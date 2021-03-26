@@ -141,16 +141,17 @@ workbook_civic.remove(workbook_civic['Sheet'])
 workbook_county.remove(workbook_county['Sheet'])
 
 sheet_civic_collect['A1'] = '序号'
-sheet_civic_collect['B1'] = '区县厂商'
+sheet_civic_collect['B1'] = '所属区'
 sheet_civic_collect['C1'] = '人脸'
 sheet_civic_collect['D1'] = '车辆'
 sheet_civic_collect['E1'] = '未知'
 sheet_civic_detail['A1'] = '序号'
-sheet_civic_detail['B1'] = '区县厂商'
+sheet_civic_detail['B1'] = '所属区'
 sheet_civic_detail['C1'] = '设备类型'
 sheet_civic_detail['D1'] = '设备ID'
 sheet_civic_detail['E1'] = '设备名称'
 sheet_civic_detail['F1'] = '设备IP'
+sheet_civic_detail['G1'] = '所属项目'
 
 sheet_county_collect['A1'] = '序号'
 sheet_county_collect['B1'] = '区县厂商'
@@ -165,26 +166,27 @@ sheet_county_detail['E1'] = '设备名称'
 
 
 #市内5区统计
-sql_civic="select data_source,function_type,id,name,ip from ape_civic where id not in (select device_id from t_receive_data_log where date=CURDATE() AND type not in ('3','7'))"
+sql_civic="select data_source,function_type,id,name,ip,ssxm from ape_civic where id not in (select device_id from t_receive_data_log where date=CURDATE() AND type not in ('3','7'))"
 res_civic=mysql_select(sql_civic)
 # print(res_civic)
 dict_civic={}
+# dict_civic = {[(人脸设备1),(人脸设备2),(人脸设备3),...], [(车辆设备1),(车辆设备2),(车辆设备3),...], [(未知设备1),(未知设备2),(未知设备3),...]}
 if res_civic:
     for e in res_civic:
         if e[0] not in dict_civic.keys():
             if e[1] == '人脸':
-                dict_civic.update({e[0]:[[(e[2], e[3], e[4])], [], []]})
+                dict_civic.update({e[0]:[[(e[2], e[3], e[4], e[5])], [], []]})
             elif e[1] == '车辆':
-                dict_civic.update({e[0]: [[], [([e[2], e[3], e[4]])], []]})
+                dict_civic.update({e[0]: [[], [([e[2], e[3], e[4], e[5]])], []]})
             else:
-                dict_civic.update({e[0]: [[], [], [([e[2], e[3], e[4]])]]})
+                dict_civic.update({e[0]: [[], [], [([e[2], e[3], e[4], e[5]])]]})
         else:
             if e[1] == '人脸':
-                dict_civic[e[0]][0].append(([e[2], e[3], e[4]]))
+                dict_civic[e[0]][0].append(([e[2], e[3], e[4], e[5]]))
             elif e[1] == '车辆':
-                dict_civic[e[0]][1].append(([e[2], e[3], e[4]]))
+                dict_civic[e[0]][1].append(([e[2], e[3], e[4], e[5]]))
             else:
-                dict_civic[e[0]][2].append(([e[2], e[3], e[4]]))
+                dict_civic[e[0]][2].append(([e[2], e[3], e[4], e[5]]))
 # print(dict_civic)
 
 
@@ -225,6 +227,7 @@ for k,v in dict_civic.items():
         sheet_civic_detail['D' + str(l2)] = v[0][i][0]
         sheet_civic_detail['E' + str(l2)] = v[0][i][1]
         sheet_civic_detail['F' + str(l2)] = v[0][i][2]
+        sheet_civic_detail['G' + str(l2)] = v[0][i][3]
         l2 += 1
 
     for i in range(len(v[1])):
@@ -234,6 +237,7 @@ for k,v in dict_civic.items():
         sheet_civic_detail['D' + str(l2)] = v[1][i][0]
         sheet_civic_detail['E' + str(l2)] = v[1][i][1]
         sheet_civic_detail['F' + str(l2)] = v[1][i][2]
+        sheet_civic_detail['G' + str(l2)] = v[1][i][3]
         l2 += 1
 
     for i in range(len(v[2])):
@@ -242,6 +246,7 @@ for k,v in dict_civic.items():
         sheet_civic_detail['C' + str(l2)] = '未知'
         sheet_civic_detail['D' + str(l2)] = v[2][i][0]
         sheet_civic_detail['E' + str(l2)] = v[2][i][1]
+        sheet_civic_detail['G' + str(l2)] = v[2][i][3]
         l2 += 1
 print('市区人脸/车辆无效设备统计已写入excel\n<--------->')
 
