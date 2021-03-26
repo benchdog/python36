@@ -251,7 +251,7 @@ for k,v in dict_civic.items():
 print('市区人脸/车辆无效设备统计已写入excel\n<--------->')
 
 #18县统计
-sql_county= "SELECT t0.name,CASE t1.FUNCTION_type WHEN '1' THEN '车辆' when '2' THEN '人脸' ELSE '未知' END AS '设备类别',t1.ape_id,t1.name from ((SELECT deviceId,name from t_viid_system where id not in ('1','32','29','34','37','38') AND type=1)t0 LEFT JOIN (select data_source,FUNCTION_type,ape_id,name from ape where ape_id not in (SELECT DISTINCT device_Id from t_push_data_log WHERE date=CURDATE() and result =1 AND data_source='13010020205035164320' AND type in ('12','13')))t1 ON t0.deviceId = t1.data_source)"
+sql_county= "SELECT t0.name,CASE t1.FUNCTION_type WHEN '1' THEN '车辆' when '2' THEN '人脸' ELSE '未知' END AS '设备类别',t1.ape_id,t1.name from ((SELECT deviceId,name from t_viid_system where id not in ('1','32','29','34','37','38') AND type=1 and name not like '%智慧社区%')t0 LEFT JOIN (select data_source,FUNCTION_type,ape_id,name from ape where length(place_code) !=20 and ape_id not in (SELECT DISTINCT device_Id from t_push_data_log WHERE date=CURDATE() and result =1 AND data_source='13010020205035164320' AND type in ('12','13')))t1 ON t0.deviceId = t1.data_source)"
 res_county=mysql_select(sql_county)
 # print(res_county)
 dict_county={}

@@ -1,7 +1,7 @@
 import pymysql
 import time
 
-# html head标签加上当天日期
+#html head标签加上当天日期
 today=time.strftime("%Y-%m-%d", time.localtime())
 
 html_path='./index.html'
@@ -30,8 +30,9 @@ def mysql_select(sql):
         return res_select
 
 #统计t_push_data_log有效设备路数
-# sql_push="SELECT t0.name,t2.type,cnt1 FROM((select deviceId,name FROM t_viid_system where type =1 and id not in(1,32))t0 LEFT JOIN (select t1.src_data_source,t1.type,count(*) AS cnt1 FROM (SELECT DISTINCT src_data_source,type,device_Id from t_push_data_log WHERE date=CURDATE() and result =1 AND ((data_source='13010020205035164320' AND type ='12') or (data_source='13010001105030000311' AND type ='13'))) t1 GROUP BY t1.src_data_source,t1.type)t2 on t0.deviceId=t2.src_data_source)"
-sql_push="SELECT t0.name,t2.type,cnt1 FROM((select deviceId,name FROM t_viid_system where type =1 and id not in(1,32))t0 LEFT JOIN (select t1.src_data_source,t1.type,count(*) AS cnt1 FROM (SELECT DISTINCT src_data_source,type,device_Id from t_push_data_log WHERE device_id != 'null' and date=CURDATE() and result =1 AND data_source='13010020205035164320' AND type in ('12','13')) t1 GROUP BY t1.src_data_source,t1.type)t2 on t0.deviceId=t2.src_data_source)"
+# sql_push="SELECT t0.name,t2.type,cnt1 FROM((select deviceId,name FROM t_viid_system where type =1 and id not in(1,32))t0 LEFT JOIN (select t1.src_data_source,t1.type,count(*) AS cnt1 FROM (SELECT DISTINCT src_data_source,type,device_Id from t_push_data_log WHERE device_id != 'null' and date=CURDATE() and result =1 AND data_source='13010020205035164320' AND type in ('12','13')) t1 GROUP BY t1.src_data_source,t1.type)t2 on t0.deviceId=t2.src_data_source)"
+#屏蔽智慧社区流
+sql_push="SELECT 	t0. NAME,	t2.type,	cnt1 FROM ((SELECT deviceId,	NAME FROM	t_viid_system WHERE type = 1 AND id NOT IN (1, 32) AND NAME NOT LIKE '%智慧社区%') t0	LEFT JOIN (SELECT	t1.src_data_source,	t1.type, count(*) AS cnt1	FROM(	SELECT DISTINCT	src_data_source,type,device_Id FROM t_push_data_log	WHERE	device_id != 'null' AND date = CURDATE() AND result = 1 AND data_source = '13010020205035164320' AND type IN ('12', '13') AND device_id in (select ape_id from ape where length(place_code) !=20)) t1 GROUP BY	t1.src_data_source,	t1.type) t2 ON t0.deviceId = t2.src_data_source)"
 res_push = mysql_select(sql_push)
 dict_push = {}
 # print(res_push)
@@ -47,7 +48,7 @@ if res_push:
             dict_push[e[0]] = {'人脸有效': 0,'车辆有效': 0}
 
 #统计上报ape路数
-sql_ape="select t3.name,CAST(t3.type AS SIGNED),IFNULL(CAST(sum(cnt1) AS SIGNED),0) as cnt1 from (SELECT t0.name,CASE t2.function_type WHEN '1' THEN '1' WHEN '2' THEN '2' else '99' END AS type,t2.cnt1 FROM((select deviceId,name FROM t_viid_system where type =1 and id not in(1,32))t0 LEFT JOIN (SELECT data_source,FUNCTION_type,count(*) as cnt1 from ape GROUP BY data_source,FUNCTION_type)t2 on t0.deviceId=t2.data_source))t3 GROUP BY t3.name,t3.type"
+sql_ape="select t3.name,CAST(t3.type AS SIGNED),IFNULL(CAST(sum(cnt1) AS SIGNED),0) as cnt1 from (SELECT t0.name,CASE t2.function_type WHEN '1' THEN '1' WHEN '2' THEN '2' else '99' END AS type,t2.cnt1 FROM((select deviceId,name FROM t_viid_system where type =1 and id not in(1,32) and name not like '%智慧社区%')t0 LEFT JOIN (SELECT data_source,FUNCTION_type,count(*) as cnt1 from ape where length(place_code) != 20 GROUP BY data_source,FUNCTION_type)t2 on t0.deviceId=t2.data_source))t3 GROUP BY t3.name,t3.type"
 res_ape = mysql_select(sql_ape)
 # print(res_ape)
 if res_ape:
@@ -65,7 +66,7 @@ if res_ape:
                 dict_push[e[0]].update({'人脸上报' if e[1] == 2 else '车辆上报': e[2]})
 
 #统计上报tollgate路数
-sql_tollgate="SELECT t0.name,t2.cnt1 FROM((select deviceId,name FROM t_viid_system where type =1 and id not in(1,32))t0 LEFT JOIN (SELECT data_source,count(*) as cnt1 from tollgate GROUP BY data_source)t2 on t0.deviceId=t2.data_source)"
+sql_tollgate="SELECT t0.name,t2.cnt1 FROM((select deviceId,name FROM t_viid_system where type =1 and id not in(1,32) and name not like '%智慧社区%')t0 LEFT JOIN (SELECT data_source,count(*) as cnt1 from tollgate where length(place_code) !=20 GROUP BY data_source)t2 on t0.deviceId=t2.data_source)"
 res_tollgate = mysql_select(sql_tollgate)
 # print(res_tollgate)
 if res_tollgate:
