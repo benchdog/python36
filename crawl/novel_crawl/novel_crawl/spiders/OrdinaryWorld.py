@@ -43,5 +43,5 @@ class OrdinaryworldSpider(scrapy.Spider):
     def download_voice(self, response):
         item = response.meta['item']
         title = item['title']
-        with open('F:\\ordinaryworld\\' + title, 'wb') as fw:
+        with open('E:\\ordinaryworld\\' + title, 'wb') as fw:
             fw.write(response.body)
