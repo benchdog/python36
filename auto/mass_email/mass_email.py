@@ -9,7 +9,8 @@ import tkinter as tk
 from tkinter import filedialog, dialog,messagebox
 import os
 
-smtp_user = 'matt@ivy.com' #机关：该名字关联微信或者qq、或者指向某一链接 #点击"发送"按钮时，可添加几个“url链接”
+# smtp_user = 'matt@ivy.com' #机关：该名字关联微信或者qq、或者指向某一链接 #点击"发送"按钮时，可添加几个“url链接”
+smtp_user = 'tian@ivy.com' #机关：该名字关联微信或者qq、或者指向某一链接 #点击"发送"按钮时，可添加几个“url链接”
 smtp_psd = '123456'
 smtp_server = smtplib.SMTP('127.0.0.1', 25)
 # smtp_server.set_debuglevel(1)
@@ -31,7 +32,8 @@ def open_filedialog():
             for line in fr.readlines():
                 to_addr_list.append(line.strip().replace(' ',''))
         to_addr_list = list(set(to_addr_list))
-        to_addr_list.append('benchdog@163.com')
+        # to_addr_list.append('benchdog@163.com')
+        # to_addr_list.append('736574514@qq.com')
         if to_addr_list:
             tk.messagebox.showinfo(title='信息', message='上传批量接收人成功')
         # else:callable(open_filedialog())
@@ -51,23 +53,29 @@ def open_filedialog():
 def send(smtp_server,smtp_user, entry1, entry2, entry3):
     global to_addr_list
 
+    #默认邮件正文、发件人、主题
+    msg = MIMEText('Linux/Hadoop/K8s技术支持加微信：dy94941 QQ：736574514', 'plain', 'utf-8')
+    msg['From'] = 'Linux/Hadoop/K8s技术支持<736574514@qq.com>'
+    msg['Subject'] = Header('Linux/Hadoop/K8s技术支持加微信：dy94941', 'utf-8').encode()
+
+    #邮件正文
     if str(entry3.get("0.0","end")).strip():
         msg = MIMEText(str(entry3.get("0.0","end")).strip(), 'plain', 'utf-8')
-    else:msg = MIMEText('13.32.4.172', 'plain', 'utf-8')
-
+    #发件人(邮件接收者中显示)
     if str(entry1.get()).strip().replace(' ',''):
         msg['From'] = str(entry1.get()).strip().replace(' ','')
-    else:msg['From'] = '大话2技术支持 <%s>' % "736574514@qq.com"
-
+    #主题
     if str(entry2.get()).strip():
         msg['Subject'] = Header(str(entry2.get()).strip(), 'utf-8').encode()
-    else:msg['Subject'] = Header('大话2辅助', 'utf-8').encode()
 
+    #批量发送
     for to_addr in to_addr_list:
-        msg['To'] = _format_addr('游戏玩家 <%s>' % to_addr)
+        # 接收人
+        msg['To'] = _format_addr('英语角 <%s>' % to_addr)
         try:
             smtp_server.sendmail(smtp_user, to_addr, msg.as_string())
             # server.sendmail(smtp_user, [to_addr], msg.as_string())
+            print('++++++发送' + str(to_addr) + '成功：')
         except Exception as e:
             print('发送' + str(to_addr) + '失败：' + str(e))
             continue
