@@ -2,8 +2,8 @@
 import psycopg2
 
 path = r'C:\Users\bench\Desktop\ip.txt'
-conn = psycopg2.connect(database="xresmgr_xresmgrdb", user="postgres", password="XWqOwIfq", host="13.38.229.116", port="7017")
-cursor = conn.cursor()
+db = psycopg2.connect(database="xresmgr_xresmgrdb", user="postgres", password="XWqOwIfq", host="13.38.229.116", port="7017")
+cursor = db.cursor()
 # cursor.execute("SELECT VERSION()")
 # data = cursor.fetchone()
 # print(data)
@@ -22,5 +22,5 @@ with open(path, 'r', encoding='utf8') as fr:
         except Exception as e:
             print(e)
 
-conn.commit()
-conn.close()
+db.commit()
+db.close()

@@ -26,19 +26,19 @@ tcp_server.bind(ip_port)
 tcp_server.listen(back_log)
 print('服务端开始运行！')
 while True:
-    conn,addr=tcp_server.accept()
-    print('双向连接：',conn)
+    db, addr=tcp_server.accept()
+    print('双向连接：', db)
     print('客户端地址：',addr)
 
     while True:
         try:
-            data=conn.recv(buffer_size)
+            data=db.recv(buffer_size)
             print('来自客户端的消息：',data.decode('utf-8'))
             msg=input('服务端输入>>>：')
             if not msg:continue
-            conn.send(msg.encode('utf-8'))
+            db.send(msg.encode('utf-8'))
         except Exception:
             break
-    conn.close()
+    db.close()
 tcp_server.close()
 

@@ -28,4 +28,3 @@ for q in range(1,125): #for循环，一共124页；
     for n in range(len(result)//7): #双色球7个号一组，
         print("开奖日期:" + str(dates[n]) + " --- " + "期号:" + str(issues[n]) + " --- " + str(result[sta:end]))
         sta = sta + 7
-        end = end + 7

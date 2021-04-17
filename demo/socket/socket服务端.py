@@ -27,12 +27,12 @@ while True:
     #[<socket.socket fd=500, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 9000), raddr=('127.0.0.1', 61685)>] [] []
     for r in readable:
         if r is server:  # 有数据，代表来了一个新连接
-            conn, addr = server.accept()
+            db, addr = server.accept()
             print("来了个新连接",addr)
-            inputs.append(conn)  # 把连接加到检测列表里，如果这个连接活动了，就说明数据来了
+            inputs.append(db)  # 把连接加到检测列表里，如果这个连接活动了，就说明数据来了
             # inputs = [server.conn] # 【conn】只返回活动的连接，但怎么确定是谁活动了
             # 如果server活动，则来了新连接，conn活动则来数据
-            msg_dic[conn] = queue.Queue()  # 初始化一个队列，后面存要返回给这个客户端的数据
+            msg_dic[db] = queue.Queue()  # 初始化一个队列，后面存要返回给这个客户端的数据
         else:
             try :
                 data = r.recv(1024)  # 注意这里是r，而不是conn，多个连接的情况

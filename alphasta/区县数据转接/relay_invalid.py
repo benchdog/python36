@@ -75,7 +75,7 @@ def ftp_upload(cwd, src, dst):
     finally:
         ftp.close()   #关闭ftp
 
-conn = pymysql.connect(
+db = pymysql.connect(
         host='13.32.4.170',
         # host='192.168.23.112',
         port=3306,
@@ -89,7 +89,7 @@ def mysql_select(sql):
     res_select = ()
     try:
         # print('查询...')
-        cursor = conn.cursor()
+        cursor = db.cursor()
         cursor.execute(sql)
         res_select = cursor.fetchall()
     except Exception as e:
@@ -166,7 +166,8 @@ sheet_county_detail['E1'] = '设备名称'
 
 
 #市内5区统计
-sql_civic="select data_source,function_type,id,name,ip,ssxm from ape_civic where id not in (select device_id from t_receive_data_log where date=CURDATE() AND type not in ('3','7'))"
+#sql_civic="select data_source,function_type,id,name,ip,ssxm from ape_civic where id not in (select device_id from t_receive_data_log where date=CURDATE() AND type not in ('3','7'))"
+sql_civic="select data_source,function_type,id,name,ip,ssxm from ape_civic where id not in (select device_id from t_receive_data_log where date=CURDATE() AND type not in ('3','7') and data_source='13010020205035164320')"
 res_civic=mysql_select(sql_civic)
 # print(res_civic)
 dict_civic={}
@@ -375,5 +376,5 @@ ftp_upload(civic, os.path.join(dir, civic_today + '.docx'), civic_today + '.docx
 ftp_upload(civic, os.path.join(dir, civic_today + '.xlsx'), civic_today + '.xlsx')
 print('<--------->')
 
-conn.close()   #关闭mysql连接
+db.close()   #关闭mysql连接
 print('脚本完成!')

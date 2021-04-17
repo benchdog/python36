@@ -13,7 +13,6 @@ def get_ip_status(ip,port):
 
 if __name__ == '__main__':
     # host = '27.1.18.12'
-    host = '149.202.83.171'
+    host = '192.168.0.2'
     for port in range(10,65535):
         get_ip_status(host,port)
-

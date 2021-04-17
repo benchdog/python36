@@ -6,7 +6,7 @@ today=time.strftime("%Y-%m-%d", time.localtime())
 
 html_path='./relay_stat.html'
 # html_path='/usr/local/nginx/html/relay_stat.html'
-conn = pymysql.connect(
+db = pymysql.connect(
         host='13.32.4.170',
         # host='192.168.23.112',
         port=3306,
@@ -20,7 +20,7 @@ def mysql_select(sql):
     res_select = ()
     try:
         # print('查询')
-        cursor = conn.cursor()
+        cursor = db.cursor()
         cursor.execute(sql)
         res_select = cursor.fetchall()
     except Exception as e:
@@ -95,5 +95,5 @@ s = ''.join(lines)
 with open(html_path,'w',encoding='utf8') as fw:
     fw.write(s)
 
-conn.close()
+db.close()
 print('脚本完成!')

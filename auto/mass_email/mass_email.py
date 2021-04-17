@@ -4,6 +4,7 @@ from email.header import Header
 from email.mime.text import MIMEText
 from email.utils import parseaddr, formataddr
 import smtplib
+import threading
 
 import tkinter as tk
 from tkinter import filedialog, dialog,messagebox
@@ -69,17 +70,25 @@ def send(smtp_server,smtp_user, entry1, entry2, entry3):
         msg['Subject'] = Header(str(entry2.get()).strip(), 'utf-8').encode()
 
     #批量发送
+    threads = []
     for to_addr in to_addr_list:
+        c = 0
         # 接收人
         msg['To'] = _format_addr('英语角 <%s>' % to_addr)
         try:
-            smtp_server.sendmail(smtp_user, to_addr, msg.as_string())
+            threads.append(threading.Thread(target=smtp_server.sendmail, args=[smtp_user, to_addr, msg.as_string()]))
+            threads[-1].setDaemon(True)
+            threads[-1].start()
+            threads[-1].join()
+            # smtp_server.sendmail(smtp_user, to_addr, msg.as_string())
             # server.sendmail(smtp_user, [to_addr], msg.as_string())
             print('++++++发送' + str(to_addr) + '成功：')
         except Exception as e:
             print('发送' + str(to_addr) + '失败：' + str(e))
             continue
-        finally:msg['To'] = ''
+        finally:
+            msg['To'] = ''
+            c += 1
     tk.messagebox.showinfo(title='信息', message='群发完成')
 
 def exit_window():

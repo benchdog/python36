@@ -9,11 +9,11 @@ ssh_server.bind(ip_port)
 ssh_server.listen(back_log)
 
 while True:
-    conn,addr=ssh_server.accept()
+    db, addr=ssh_server.accept()
     print('新的客户端连接：',addr)
     while True:
         try:
-            cmd=conn.recv(buffer_size)
+            cmd=db.recv(buffer_size)
             print('收到客户端的命令：',cmd.decode('gbk'))
             res=subprocess.Popen(cmd.decode('gbk'),shell=True,
                                  stderr=subprocess.PIPE,
@@ -25,9 +25,9 @@ while True:
             else:
                 cmd_res=res.stdout.read()
 
-            conn.send(cmd_res)
+            db.send(cmd_res)
         except Exception as e:
             print(e)
             break
-    conn.close()
+    db.close()
 ssh_server.close()

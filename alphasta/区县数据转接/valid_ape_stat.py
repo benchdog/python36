@@ -12,9 +12,9 @@ worksheet.write(0,2,"人脸")
 worksheet.write(0,3,"车辆")
 # worksheet.write(0,4,"有效设备数")
 
-conn = pymysql.connect(host="13.32.4.170",user="alpview",password="123456",database="db1400",charset="utf8")
+db = pymysql.connect(host="13.32.4.170", user="alpview", password="123456", database="db1400", charset="utf8")
 # 得到一个可以执行SQL语句并且将结果作为字典返回的游标
-cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+cursor = db.cursor(cursor=pymysql.cursors.DictCursor)
 # 执行完毕返回的结果集默认以元组显示
 # cursor = conn.cursor()
 sql_ape_day='''SELECT t5.区县厂商,t5.type AS '数据类型',count(*) AS '数量' FROM (SELECT t4.NAME AS '区县厂商',
@@ -54,5 +54,5 @@ for k,v in resdata_dict.items():
 #     worksheet.write(i+1,3,resdata[i][2])
 
 cursor.close
-conn.close
+db.close
 workbook.save(r'C:\Users\l\Desktop\有效设备列表.xls')

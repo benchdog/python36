@@ -4,8 +4,8 @@
 import xlrd
 import pymysql
 
-conn = pymysql.connect (host="13.32.4.169", port=3306, user = "alpview", passwd = "123456", db = "db1400", charset="utf8")
-cursor = conn.cursor()
+db = pymysql.connect (host="13.32.4.169", port=3306, user ="alpview", passwd ="123456", db ="db1400", charset="utf8")
+cursor = db.cursor()
 
 excel_path= "./dahua.xlsx"
 excel_file = xlrd.open_workbook(excel_path)
@@ -60,9 +60,9 @@ for row in range(1,row_nums):
     # print(row_values)
     try:
         res=cursor.execute(sql,row_values)
-        conn.commit()
+        db.commit()
         # print(res)
     except Exception as e:
-        conn.rollback()
+        db.rollback()
         print(e)
-conn.close()
+db.close()

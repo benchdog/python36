@@ -104,7 +104,7 @@ for sheet_idx in range(2,len(all_sheets)):   #递归获取每一个sheet页(不�
 # print(stat_list)
 
 
-conn = pymysql.connect(
+db = pymysql.connect(
         host=mysql_host,
         port=3306,
         # user='alpview',
@@ -115,20 +115,20 @@ conn = pymysql.connect(
         db='drying',
         charset='utf8'
 )
-cursor = conn.cursor()
+cursor = db.cursor()
 sql = """INSERT INTO t_collection_situation (name,file_name, content_amount, type, state, update_time,create_by,create_time,report_time,is_inner,upload_method,data_quality,report_amount,upload_file,table_name) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 # sql = """INSERT INTO stat_test (name,file_name, content_amount, type, state, update_time,create_by,create_time,report_time,is_inner,upload_method,data_quality,report_amount,upload_file,table_name) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 try:
     print('插入MySQL开始')
     cursor.executemany(sql, stat_list)
-    conn.commit()
+    db.commit()
     print('插入MySQL完成')
 except Exception as e:
     print("插入MySQL异常:" + e)
-    conn.rollback()
+    db.rollback()
 finally:
     cursor.close()
-    conn.close()
+    db.close()
 
 workbook.close()   #关闭工作薄
 print("脚本结束")
