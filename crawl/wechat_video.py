@@ -54,12 +54,12 @@ def get_stream(url, path, type):
 
 
 
-# type = 'wb'
-# path='D:/迅雷下载/' + '白夜行.mp4'
-url = 'http://mpvideo.qpic.cn/0bf2ciaagaaaoian6vldajqfaewdamjaaaya.f10003.mp4?dis_k=c6ab8845730434594ae7a9f21860933e&dis_t=1618201873&vid=wxv_1804640325353684995&format_id=10003'
+type = 'wb'
+path='D:/迅雷下载/' + '阳光灿烂的日子.mp4'
+url = 'http://mpvideo.qpic.cn/0bf244abcaaal4aa4rkcg5pvbz6dchtqaeia.f10002.mp4?dis_k=c3953fdbe7d5f461a4b6604b6157f904&dis_t=1618886400&vid=wxv_1486071188425654272&format_id=10002'
 
-type = 'ab+'
-path='D:/stream/' + '大神TP高价约炮外冷内骚的170蓝衣美女操起来很有感觉.ts'
+# type = 'ab+'
+# path='D:/stream/' + '.ts'
 
 if type == 'wb':
     if get_stream(url, path, type):
