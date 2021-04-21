@@ -6,8 +6,8 @@ import pymysql
 from ftplib import FTP
 FTP.encoding = 'utf8' #ftplib包里面对encoding设置成了latin-1，需要重设成utf8,解决ftp中文目录报错问题
 import stat
-from minio import Minio
-
+# from minio import Minio
+# from fdfs_client.client import Fdfs_client,get_tracker_conf
 
 #从ftp下载zip数据到本地
 def down_from_ftp(ftp_ip, ftp_user, ftp_passwd, remotepath, localpath):
@@ -50,6 +50,19 @@ def unzip(zfile,dstpath):
         finally:
             zip.close()
             return unzip_list
+
+def fdfs_upload(content,suffix):
+    tracker_conf = get_tracker_conf(fdfs_conf)  # 绝对路径
+    fdfs_client = Fdfs_client(tracker_conf)
+    try:
+        upload_status = fdfs_client.upload_by_buffer(content, suffix)
+        if upload_status.get('Status') == "Upload successed.":
+            # print('fdfs上传成功')
+            return bytes.decode(upload_status.get('Remote file_id'))
+        else:
+            print('fdfs上传失败')
+    except Exception as e:
+        print('fdfs上传异常' + '：' + str(e))
 
 #解析txt文本数据入mysql，图片入minio
 def tomysql(txtfile,db):
@@ -125,8 +138,8 @@ if __name__ == '__main__':
         charset='utf8'
     )
 
-mc = Minio('27.27.27.14:7000',access_key='minioadmin',secret_key='zuf+minioadmin',secure=False)
-mc.make_bucket("onrun") #生成一个bucket，类似文件夹
+# mc = Minio('27.27.27.14:7000',access_key='minioadmin',secret_key='zuf+minioadmin',secure=False)
+# mc.make_bucket("onrun") #生成一个bucket，类似文件夹
 
 #下载当天照片数据
 if down_from_ftp(ftp_ip, ftp_user, ftp_passwd, ftp_base_remote + '_ZP.zip', ftp_base_local + '_ZP.zip'):

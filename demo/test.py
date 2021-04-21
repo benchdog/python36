@@ -1114,3 +1114,8 @@ else:
 # if __name__ == '__main__':
 #     main()
 
+import datetime
+today=datetime.date.today()
+oneday=datetime.timedelta(days=1)
+yesterday=today-oneday
+print(yesterday)
