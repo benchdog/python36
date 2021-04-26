@@ -54,12 +54,12 @@ def get_stream(url, path, type):
 
 
 
-type = 'wb'
-path='D:/迅雷下载/' + '阳光灿烂的日子.mp4'
+# type = 'wb'
+# path='D:/迅雷下载/' + '阳光灿烂的日子.mp4'
 url = 'http://mpvideo.qpic.cn/0bf244abcaaal4aa4rkcg5pvbz6dchtqaeia.f10002.mp4?dis_k=c3953fdbe7d5f461a4b6604b6157f904&dis_t=1618886400&vid=wxv_1486071188425654272&format_id=10002'
 
-# type = 'ab+'
-# path='D:/stream/' + '.ts'
+type = 'ab+'
+path='D:/stream/' + '.ts'
 
 if type == 'wb':
     if get_stream(url, path, type):

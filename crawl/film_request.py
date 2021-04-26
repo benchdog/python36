@@ -4,8 +4,8 @@ import time
 
 import requests
 from bs4 import BeautifulSoup
-# from fdfs_client.client import Fdfs_client,get_tracker_conf
-# import pymysql
+from fdfs_client.client import Fdfs_client,get_tracker_conf
+import pymysql
 from elasticsearch6 import Elasticsearch
 
 # print('\u8266')

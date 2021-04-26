@@ -1114,8 +1114,17 @@ else:
 # if __name__ == '__main__':
 #     main()
 
-import datetime
-today=datetime.date.today()
-oneday=datetime.timedelta(days=1)
-yesterday=today-oneday
-print(yesterday)
+# import datetime
+# today=datetime.date.today()
+# oneday=datetime.timedelta(days=1)
+# yesterday=today-oneday
+# print(yesterday)
+
+
+# from functools import reduce
+# li = [-2, 2, 3, 4]
+# res = list(map(lambda x : x * -1, li))
+# res2 = list(filter(lambda x : x * -1, li))
+# res3 = reduce(lambda x,y : y * -1, li)
+# print(res3)
+
