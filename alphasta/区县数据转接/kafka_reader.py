@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+    # -*- coding: utf-8 -*-
 '''
 智慧社区测试数据(仅车辆)，从kafka MotorVehicle_huawei_101中消费指定卡口ID的车辆数据，
 然后把大小图url格式转换成base64格式，以JSON格式保存到文本。
@@ -10,10 +10,10 @@ import base64
 import requests
 
 topic = 'Face_huawei_101'
-where = 'file'
-file_path = 'C:\\Users\\bench\\Desktop\\' + topic + '.json'
+where = 'kafka'
+file_path = 'C:\\Users\\wf\\Desktop\\' + topic + '.json'
 
-consumer_servers=['tlnode168:9092','tlnode169:9092','tlnode170:9092','tlnode171:9092','tlnode172:9092','tlnode174:9092','tlnode2491:9092','tlnode2495:9092','tlnode2497:9092','tlnode2498:9092']
+consumer_servers=['27.27.27.9:9092','27.27.27.10:9092','27.27.27.11:9092','27.27.27.12:9092','27.27.27.13:9092','27.27.27.14:9092','27.27.27.15:9092','27.27.27.16:9092']
 #没连接万方vpn情况下，需要注释掉一下两行
 # producer_servers=['alpnode01:9092','alpnode02:9092','alpnode03:9092']
 # producer = KafkaProducer(bootstrap_servers=producer_servers)

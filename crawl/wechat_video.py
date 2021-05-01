@@ -55,11 +55,13 @@ def get_stream(url, path, type):
 
 
 # type = 'wb'
-# path='D:/迅雷下载/' + '阳光灿烂的日子.mp4'
-url = 'http://mpvideo.qpic.cn/0bf244abcaaal4aa4rkcg5pvbz6dchtqaeia.f10002.mp4?dis_k=c3953fdbe7d5f461a4b6604b6157f904&dis_t=1618886400&vid=wxv_1486071188425654272&format_id=10002'
+# path='D:/迅雷下载/' + '领导人摔倒瞬间集锦，拜登竟然是摔得最轻的.mp4'
+url = 'http://v.qq.com/txp/iframe/player.html?origin=https%3A%2F%2Fmp.weixin.qq.com&chid=17&vid=g32373ulvpw&autoplay=false&full=true&show1080p=false&isDebugIframe=false'
 
 type = 'ab+'
-path='D:/stream/' + '.ts'
+path='D:/迅雷下载/' + '领导人摔倒瞬间集锦，拜登竟然是摔得最轻的.ts'
+url_prefix = "http://111.63.131.157/111.32.167.51/omts.tc.qq.com/A6HxW47DBiLEXsLTNKkY3uHWeb0RhJUsdJSj06jtisys/uwMROfz2r57EIaQXGdGnC2deOm7-JKnucyQfuw_Pm9OZymwJ/svp_50001/RAdmGzlce_VNZrATDttcoJMwqRosYnfKsJST6mkfvIA2W9-BRRP2m41Q_5BjhlMNWZ80auKU3pMyzveacpJM2QLVI_ww3CwXXbrrYo5aV3ka6Y40wmPgkw1WV39OyRQxnFukD_2LgTNm-RsnqcTsueCctZBhqiO4hEEp_rNMTJg/"
+# path='D:/迅雷下载/miya/' + '领导人摔倒瞬间集锦，拜登竟然是摔得最轻的.ts'
 
 if type == 'wb':
     if get_stream(url, path, type):
@@ -70,7 +72,7 @@ elif type == 'ab+':
         for line in fr.readlines():
             if not line.strip().startswith('#'):
                 count += 1
-                if get_stream(line.strip(), "" + path, type):
+                if get_stream(url_prefix + line.strip(), path, type):
                     print('OK：', str(count))
                     # time.sleep(random.random())
         print('\033[32mOK')

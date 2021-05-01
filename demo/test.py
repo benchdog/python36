@@ -775,6 +775,8 @@ else:
 # loop = asyncio.get_event_loop()
 # loop.run_until_complete(asyncio.wait(tasks))
 
+# print(len({'11':'11','22':'22'}))
+# print(type(-1))
 
 # import asyncio
 # async def func1():
@@ -1128,3 +1130,8 @@ else:
 # res3 = reduce(lambda x,y : y * -1, li)
 # print(res3)
 
+# import json
+# message = '123'
+# print(json.loads(message))
+# print(('13018300001190255071')[10:13])
+# print(float('113.123456'))
