@@ -1135,3 +1135,11 @@ else:
 # print(json.loads(message))
 # print(('13018300001190255071')[10:13])
 # print(float('113.123456'))
+# l = [1,2,3,4,5,6]
+# print(l[3::])
+# print(l[3:6])
+
+# face_elements = ['FaceID','InfoKind','SourceID','DeviceID','LeftTopX','LeftTopY','RightBtmX','RightBtmY','IsDriver','IsForeigner','IsSuspectedTerrorist','IsCriminalInvolved','IsDetainees','IsVictim','IsSuspiciousPerson','img']
+# print(face_elements[15])
+
+# print(['11','14'] in ['11','14','11',['11','14']])
