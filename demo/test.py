@@ -1,7 +1,8 @@
-#-*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 # # from bs4 import BeautifulSoup
 # # import requests,time
 import random
+
 # import os
 # # with open('doc.html') as rf:
 # #     soup = BeautifulSoup(rf,'html.parser')
@@ -44,7 +45,6 @@ import random
 #     sys.stdout.flush()
 
 
-
 # import json
 # dic = {'name':'alex'}
 # fw = open("hello","w")
@@ -79,14 +79,14 @@ import random
 
 # print(list("asdf"))
 
-#列表转字符串(字符串加数字)：
+# 列表转字符串(字符串加数字)：
 # li = [11, 22, 33, "asd", "xyz", "879", "hello"]
 # s = ""
 # for item in li:
 # 	s = s + str(item)
 # print(s)
 
-#列表转字符串(只有字符串)：
+# 列表转字符串(只有字符串)：
 # li = ["ety", "xyz", "hello", "world"]
 # s = "".join(li)
 # print(s)
@@ -182,7 +182,7 @@ import random
 # a.extend(b)
 # print(a)  # ['一', '弦', '一', '柱', '思', '华', '年', 'a', 'b', 'c', 'd']
 
-#import re
+# import re
 # print(re.search('(?P<name>[a-z]+)(?P<age>\d+)',"asd123fgh456jkl789").group())
 # print(re.split('[ |]','hello iam|matt'))
 # print(re.split('[ab]','asdabcd'))
@@ -275,7 +275,6 @@ import random
 # print(p2.leixing)
 
 
-
 # import time, threading
 #
 # # 新线程执行的代码:
@@ -317,7 +316,6 @@ import random
 # t1.join()
 # t2.join()
 # print(res)
-
 
 
 # import threading,time
@@ -396,7 +394,6 @@ import random
 #     data=q.get(block=False)
 #     print(data)
 #     print('------')
-
 
 
 # import time,random
@@ -734,10 +731,10 @@ else:
 
 # for i in range(5):
 #     if i == 3:
-        # pass
-        # continue
-        # break
-    # print(i)
+# pass
+# continue
+# break
+# print(i)
 
 # print(__file__)
 # import os
@@ -918,7 +915,7 @@ else:
 #         return match_result
 # print(matchImg(src, obj))
 
-#全屏截图
+# 全屏截图
 # from PIL import ImageGrab
 # im = ImageGrab.grab()
 # im.save(r'C:\Users\bench\Desktop\img_window.png')
@@ -1084,7 +1081,7 @@ else:
 #
 # B.pack()
 # top.mainloop()
-#! /usr/bin/env python
+# ! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
 # from concurrent.futures import ThreadPoolExecutor
@@ -1143,3 +1140,31 @@ else:
 # print(face_elements[15])
 
 # print(['11','14'] in ['11','14','11',['11','14']])
+
+# import time
+# now = time.strftime("%Y-%m-%d %H:%M:%S")
+# print(now + ' - ' +'ini' + ' - ' + '121')
+#
+# with open(r'C:\Users\wf\Desktop\智慧o-长安-宇视.html', 'a+', encoding='utf8') as fw:
+#     lines = fw.readlines().split('\n')
+#     lines.insert[5,'122']
+
+import threading
+import time
+
+#
+# def f(v):
+#     time.sleep(1)
+#     print(v)
+#
+# t_list = []
+# before = time.time()
+# for i in range(100):
+#     str_i = str(i)
+#     t = threading.Thread(target=f, args=(str_i,))
+#     t.start()
+#     # t.join()
+#     # t_list.append(t)
+# print(time.time() - before)
+
+# print(len(None))
