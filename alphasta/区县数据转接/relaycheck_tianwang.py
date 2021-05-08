@@ -11,13 +11,6 @@ import logging
 import pymysql
 import os
 
-#todo 多线程消费kafka ok
-#todo 日志加日期时间 ok
-#todo 获取t_viid_system表的deviceid和name进行映射kafka message的key ok
-#todo web展示方式-可下载log文件也可web查看: http://ip/minio/智慧-裕华-海康_年月日.log
-#todo 支持筛选只校验个别平台数据问题，提高对接效率 ok
-#todo minio研究：只打开对象下载和查看权限
-
 
 def log_err_append(log_err_list: list, msg:str, resourcetype='未知数据类型'):
     log_err = resourcetype + ':' + msg
@@ -242,12 +235,13 @@ if __name__ == '__main__':
 
     # 从MySQL db1400 t_viid_system表获取所有下级视图库的平台ID和名称
     mydb_inner = pymysql.connect(host='13.32.4.170', port=3306, user='alpview', password='123456', db='db1400', charset='utf8')
-    sql_inner = "select deviceid,name from t_viid_system where type = '1' and name like '智慧%' and id NOT IN (1, 32, 38)"
+    sql_inner = "select deviceid,name from t_viid_system where type = '1' and name not like '智慧%' and id NOT IN (1, 32, 38)"
     viid_inner = mysql_select(mydb_inner, sql_inner)
 
-    mydb_outter = pymysql.connect(host='27.27.27.16', port=3306, user='alpview', password='123456', db='db1400', charset='utf8')
-    sql_outter = "select deviceid,name from t_viid_system where type = '1'"
-    viid_outter = mysql_select(mydb_outter, sql_outter)
+    # mydb_outter = pymysql.connect(host='27.27.27.16', port=3306, user='alpview', password='123456', db='db1400', charset='utf8')
+    # sql_outter = "select deviceid,name from t_viid_system where type = '1'"
+    # viid_outter = mysql_select(mydb_outter, sql_outter)
+    viid_outter = ()
 
     viid_all = tuple(list(viid_inner) + list(viid_outter))
     viid_dict = {}
@@ -261,7 +255,7 @@ if __name__ == '__main__':
 
     bootstrap_servers = ['13.32.4.168:9092', '13.32.4.169:9092', '13.32.4.170:9092', '13.32.4.171:9092', '13.32.4.172:9092', '13.32.4.174:9092', '13.37.249.1:9092', '13.37.249.5:9092', '13.37.249.7:9092', '13.37.249.8:9092']
     # bootstrap_servers = ['27.27.27.9:9092', '27.27.27.10:9092', '27.27.27.11:9092', '27.27.27.12:9092', '27.27.27.13:9092', '27.27.27.14:9092', '27.27.27.15:9092', '27.27.27.16:9092']
-    kafka_meta = {'topic': "dahua_101", 'group_id': 'alp_check'}
+    kafka_meta = {'topic': "dahua_101", 'group_id': 'relaycheck_tianwang'}
     consumer = KafkaConsumer(kafka_meta['topic'], group_id=kafka_meta['group_id'], bootstrap_servers=bootstrap_servers, auto_offset_reset="latest", enable_auto_commit=True, auto_commit_interval_ms=5000)
 
     for message in consumer:
